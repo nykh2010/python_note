@@ -1,0 +1,141 @@
+课程:MongoDB
+进度:day4
+
+上次内容回顾
+
+作业:
+在orders集合中,编写下列语句
+1)统计订单笔数
+  db.orders.find().count()
+  
+2)查询所有订单,按照下单时间倒序显示
+  db.orders.find().sort({order_date:-1})
+  
+3)修改某个订单状态
+  db.orders.update({
+	{order_id:"201801030002"},
+	{$set:{status:3}}
+  })
+  
+4)为所有订单添加一个域: 支付状态
+  payment_status
+  db.orders.update(
+	{},
+	{$set:{payment_status:null}},
+	false,
+	true
+  )
+  
+5)查询所有订单中,包含了编号为"P0001"
+  商品的订单
+  db.orders.find({
+	"order_detail.product_id":"P0001"
+  })
+  
+6)在订单集合的订单编号(order_id)域
+  创建升序索引
+  db.orders.createIndex({order_id:1})
+  
+7)为某个订单添加备注信息
+(要求为字符串数组)
+  db.orders.update(
+	{order_id:"201801030002"},
+	{$pushAll:{
+		remark:["尽快送达","工作日收货","到付"]
+	}}
+  )
+
+8)删除一笔无效订单(根据状态删除,值自定)
+  db.orders.remove(
+	{order_id:"201801030002", status:2},
+	true
+  )
+
+今天内容
+
+1. 文件存储
+  1)数据库中文件存储方式
+    - 存路径,文件存放到磁盘中
+	  优点:简单,不会占用数据库的存储空间
+	  缺点:当路径和实际位置不一致时,
+	       就找不到文件
+	- 直接讲文件存入数据库
+	  优点:不会出现路径和文件不一致
+	  缺点:占用数据库存储空间
+  2)GridFS
+    - GridFS存储文件的方式
+	- 主要用来存储二进制文件(图片,视频...)
+	- 存储原理: 将文件分解成很多片段(chunk),
+	  每个chunk作为一个文档存储chunks集合中
+	- 优点:
+      能够存储很大的文件
+      分布式环境下,能够自动同步文件元数据
+	  读取文件,只需要加载部分数据即可
+	- 缺点
+	  读取效率比直接从磁盘读取要慢
+	  如果文件需要替换,只能整体更新
+    
+	- 示例: 使用GridFS存取文件
+	第一步: 找一个二进制文件,可以是
+	        jpg/tar.gz格式, 拷贝到home目录
+			例子中使用stone.jpg
+	第二步: 存文件
+            mongofiles -d gridfs put ~/stone.jpg	
+	            -d 指定存储到哪个库
+				put 表示存文件操作 
+				路径 要存的文件
+			查看存储的文件, 先登录mongo shell
+			   use gridfs
+			   db.fs.files.find().pretty()
+			   db.fs.chunks.find().pretty()
+	第三步: 删除~/stone.jpg
+	第四部: 提取文件
+	        mongofiles -d gridfs get ~/stone.jpg
+			
+2. pymongo: 使用Python操作MongoDB
+  1)安装: pip3 install pymongo
+    验证: 进入Python交互模式,
+          执行import pymongo,
+          如果不报错,说明安装成功
+  2)pymongo访问数据库的步骤
+    第一步: 创建MongoDB服务器的连接
+	第二步: 获取数据库对象
+	第三步: 通过数据库对象获取集合对象
+	第四步: 执行操作
+	第五步: 关闭数据库连接
+	
+	示例1: 显示服务器上所有的库
+	       见show_dbs.py
+	示例2: 查询
+	       见query.py
+	示例3: 插入
+	  - insert()   插入一笔或多笔
+	  - insert_one()  只插入一笔
+	  - insert_many() 插入多笔
+	  - save() 如果_id存在则更新,否则插入
+	  
+	  * 以上几个函数,均传入一个字典类型参数
+	  示例:见insert.py
+	  
+	示例4:修改
+	  - update(query,update,
+	          upsert=False,
+			  multi=True)
+		query: 修改条件
+		update: 修改内容
+		upsert: 是否执行插入
+		multi: 是否修改多笔
+		见update.py
+		
+综合示例: 见acct_manage_cli.py
+            acct_manage_svr.py
+
+
+
+
+
+
+
+
+
+

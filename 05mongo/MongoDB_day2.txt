@@ -1,0 +1,453 @@
+课程:MongoDB
+进度:day2
+
+上次内容回顾
+1. 关系型数据库:处理结构化数据 
+  关系,元组(记录),属性,键,主键(非空,唯一)
+  约束,外键,索引,事务
+  
+2. 非关系型数据库:处理非结构化数据
+  扩展性,并发处理,非结构化数据处理
+  
+3. MongoDB特点
+  C++开发
+  文档存储数据
+  技术相对成熟,很多特性类似关系型数据库
+  支持丰富的编程接口
+  
+4. MongoDB操作
+  1)服务器操作
+    /etc/init.d/mongo [status|start|stop]
+  2)库操作
+    切换库:use 数据库名
+	查看库:show dbs
+	删除库:db.dropDatabase()
+	
+  3)集合操作
+    集合创建: db.createCollection(名称)
+	          插入数据时自动创建
+	查看集合: show collections
+	          show tables
+	集合删除: db.集合名称.drop()
+	集合重命名: db.集合名称.renameCollection(新名称)
+  
+  4)文档操作
+    插入
+	db.集合名称.insert({
+		key1:value1,
+		key2:value2,
+		......
+	})
+	
+	插入多笔
+	db.集合名称.insert([
+		{
+			key1:value1,
+			key2:value2,
+			......
+		},
+		{}
+	])
+	
+	插入或修改
+	db.集合名称.save({
+		key1:value1,
+		key2:value2,
+		......
+	})
+	
+  5)数据组成
+   域 --> 文档 --> 集合 --> 库
+   
+作业:
+# 1. 创建库
+use eshop
+
+# 2. 创建集合
+db.createCollection("orders")
+
+# 3. 插入文档
+db.orders.insert({
+    order_id:"201801010001",
+    cust_name:"Jerry",
+    order_date:new Date(),
+    status:1,
+    order_detail:[
+        {
+            product_id:"P0001",
+            product_name:"水杯",
+            amt:1,
+            price:15.00
+        },
+        {
+            product_id:"P0002",
+            product_name:"Python编程",
+            amt:1,
+            price:85.00 
+        }
+    ]
+})
+
+今天的内容
+1.文档查找操作
+  1)带条件查询
+    格式: db.集合名称.find({条件1,条件2...})
+          其中,条件是由key:value键值对构成
+	
+	示例: 根据账号,查询账户信息
+	db.acct.find({acct_no:"622345000003"})
+	相当于: select * from acct
+	        where acct_no = '622345000003'
+
+	示例: 根据账号,账户类型查询
+	db.acct.find({
+		acct_no:"622345000003",
+		acct_type:3
+	})
+	相当于: select * from acct
+	        where acct_no = '622345000003'
+			and acct_type = 3
+
+	示例: 查找一笔数据
+	db.acct.findOne({acct_type:1})
+	
+  2)指定查找结果显示的域
+    格式: db.集合名词.find(
+		{查询条件},
+		{设置显示的域}
+	)
+	
+	示例: 查询,在查询结果中不显示_id域
+	db.acct.find({},{_id:0})
+	
+	示例: 查询部分域,并指定是否显示
+	db.acct.find(
+		{},
+		{_id:0, acct_no:1, acct_name:1}
+	)
+	相当于: select acct_no, acct_name
+	        from acct
+	
+	说明: 指定某个域显示或不显示,有如下规则:
+	  - 指定某个域为0,表示该域不显示,其它全显示
+	  - 指定某个域为1,表示该域显示,其它都不显示
+	  - 除_id域之外,其它域只能是同一个值
+	  - 如果不填写该组参数,默认显示所有的域
+  
+  3)比较操作符  
+    a)SQL语句的比较操作符
+	  - 比较: =,<>,>,<,>=,<=
+	  - in, not in
+	  - and, or
+	  
+	b)MongDB中的比较操作符
+	  - 等于/不等于: $eq/$ne
+	    示例: 查询acct_type不等于1的数据
+		db.acct.find({
+			acct_type:{$ne:1}
+		})
+		
+		示例: 查询账号为622345000003的数据
+		db.acct.find({
+			acct_no:{$eq:"622345000003"}
+		})
+		
+	  - 大于: $gt  (greater than简写)
+	    示例: 查询余额大于5000的账户信息
+		db.acct.find({
+			balance:{$gt:5000}
+		})
+		
+	  - 小于: $lt   (less than简写)
+	    示例: 查询余额小于5000的账户信息
+		db.acct.find({
+			balance:{$lt:5000}
+		})
+		
+		示例: 字符串也可以比较.查询账号大于
+		      622345000002的信息
+		db.acct.find({
+			acct_no:{$gt:"622345000002"}
+		})
+		
+	  - 大于等于/小于等于: $gte/$lte
+	    示例: 查找余额大于等于2000的账户
+		示例: 查找余额小于等于2000的账户
+	
+	  - 包含/不包含: $in, $nin
+	    示例: 查找acct_type在[2,3]中的账户
+		db.acct.find({
+		   acct_type:{$in:[2,3]}
+		})
+		相当于: select * from acct
+		        where acct_type in (2,3)
+
+	  - 逻辑和: $and
+	    示例: 查询账号为622345000001
+		      并且账户名称为Jerry的数据
+		db.acct.find({
+			acct_no:"622345000001",
+			acct_name:"Jerry"
+		})
+		db.acct.find({
+			$and:[
+				{acct_no:"622345000001"},
+				{acct_name:"Jerry"}
+			]
+		})
+		
+		示例: 查询acct_type为1
+		      并且balance小于5000的账户
+		db.acct.find({
+			$and:[
+				{acct_type:1},
+				{balance:{$lt:5000}}
+			]
+		})
+		
+	  - 逻辑或: $or
+	    示例: 查询账号为622345000001
+		      或者账号为622345000002的数据
+		db.acct.find({
+			$or:[
+				{acct_no:"622345000001"},
+				{acct_no:"622345000002"}
+			]
+		})
+		相当于: select * from acct
+		        where acct_no = '622345000001'
+				   or acct_no = '622345000002'
+				   
+	  - 逻辑非: $not
+	    示例: 查询金额不大于5000
+		db.acct.find({
+			balance:{$not:{$gt:5000}}
+		})
+		
+		示例: 查询账户类型不为1的数据
+		db.acct.find({
+			acct_type:{$not:{$eq:1}}
+		})
+		
+	  - 既不也不: $nor
+	  示例: 查询acct_type不等于3
+	        余额也不等于2000的数据
+	  db.acct.find({
+		$nor: [
+			{acct_type:3},
+			{balance:2000}
+		]
+	  })		
+	  相当于: select * from acct 
+	          where acct_type <> 3
+			  and balance <> 2000
+			  
+  4)涉及数组的操作
+    第一步: 构建一个带有数组的集合
+	  db.student.insert({
+		name:"Dekie",age:22,score:[60,70,80]
+	  })
+	  db.student.insert({
+		name:"Michile",age:23,score:[85,70,90,95]
+	  })
+	  db.student.insert({
+		name:"David",age:24,score:[90,95,92],sex:1
+	  })
+	  
+    示例: 查询成绩(score)中包含70的数据
+	db.student.find({score:70})
+	
+	示例: 查询成绩中包含70和90的数据
+	db.student.find({score:{$all:[70,90]}})
+	
+	示例: 查询只有三门的学生信息, 使用$size指令
+	db.student.find({score:{$size:3}})
+
+  5)其它查询指令
+    a) 判断是否存在某个域: $exists
+	  示例:查询student集合中,存在sex域的数据
+	  db.student.find({sex:{$exists:true}})
+	  * $exists后面改成false,则查找sex域不存在的数据
+	  
+	b)根据余数查找: $mod
+	  示例: 查找年龄奇数的学生信息
+	  db.student.find({age:{$mod:[2,1]}})
+  
+  6)查找函数:去重,显示前N笔,排序,统计
+    - distinct: 去重
+	  示例: 查看acct集合中acct_type的个数
+	  db.acct.distinct("acct_type")
+	  
+	- limit: 显示查找结果的前N笔
+	  示例: 显示查询结果的前2笔
+	  db.acct.find().limit(2)
+	  
+	- skip: 跳过查找结果的前N笔
+	  db.acct.find().skip(2)
+	  
+	- count: 统计查询结果笔数
+	  db.acct.find().count() 统计所有
+	  db.acct.find({acct_type:1}).count() 统计满足条件
+	  
+	- sort: 排序
+	  格式: sort({域, 1/-1})
+	        1: 升序
+			-1:降序
+	  示例: 查询acct表,按照balance降序
+	  db.acct.find().sort({balance:-1})
+
+2. 文档删除
+  1)语法: db.集合名称.remove(query,justOne)
+	说明: query  筛选条件,如果写作{}表示删除所有
+	      justOne 布尔值, 是否删除一笔
+		          true: 删除一笔符合条件的
+				  false:删除所有符合条件的
+	示例: 删除acct_type为3的数据
+	db.acct.remove({acct_type:3},true)
+	
+3. 修改文档
+  1)语法
+    db.集合.update(query,update,upsert,mulit)
+    
+	说明: query 筛选条件,格式和写法同查询操作
+          update 修改内容
+		  upsert 如果没有满足条件数据时
+		         是否执行插入 true-是 false-否
+		  multi  是否修改多笔 true-是 false-否
+  2)示例
+    - $set: 修改域的值
+	  e.g. 修改某个账户余额
+	  db.acct.update(
+		{acct_no:"622345000001"}, #筛选条件
+		{$set:{balance:2222.22}}, #修改内容
+		false, #没有满足条件数据时,不执行插入
+		false #修改单笔
+	  )
+	
+	  e.g. 修改多个域,如果某个域不存在,则创建
+	  db.acct.update(
+		{acct_no:"622345000001"}, 
+		{$set:{balance:0.00,
+				close_date:new Date()
+		}},
+		false, 
+		false 
+	  )
+	  
+	- $rename: 修改域名称
+	 e.g. 修改close_date为revoke_date
+	 db.acct.update(
+		{acct_no:"622345000001"},
+		{$rename:{"close_date":"revoke_date"}},
+		false,
+		false
+	 )
+	 
+	- $inc: 加法修改器, 完成域的加减运算
+	  e.g. 将某个账户余额增加10000元(例如存款)
+	  db.acct.update(
+		{acct_no:"622345000002"},
+		{$inc:{balance:10000}},
+		false,
+		false
+	  )
+	  
+	- $mul: 乘法修改器
+	  e.g. 将某个账户余额上增加2%的利息
+	  db.acct.update(
+		{acct_no:"622345000002"},
+		{$mul:{balance: 1.02}},
+		false,
+		false
+	  )
+	  
+	- $min: 用指定的值和某个域值比较
+	        取其中较小的值
+	  e.g. 修改课程成绩最大值为100分
+	  db.course_score.insert({name:"Bob", score:105})
+	  db.course_score.insert({name:"Tom", score:92})
+	  db.course_score.insert({name:"Alice", score:80})
+	  
+	  db.course_score.update(
+		{},
+		{$min:{score:100}}, #取socre和100中小的数
+		false,
+		true
+	  )
+	  
+	- $max: 用指定的值和某个域值比较
+	       取其中较大的值
+	  e.g. 将低于45分的成绩, 修改成45分
+	  db.course_score.update(
+		{},
+		{$max:{score:45}},
+		false,
+		true
+	  )
+	  
+	- push/pushAll: 向数组中添加一项或多项数据
+	  e.g. 向student集合中,名称为David学生添加一门成绩
+	  db.student.update(
+		{name:"David"},
+		{$push:{score:99}},
+		false,
+		true
+	  )
+	  
+	  e.g. 向student集合中, 名为Dekie学生添加2门成绩
+	  db.student.update(
+		{name:"Dekie"},
+		{$pushAll:{score:[88,77]}},
+		false,
+		true
+	  )
+	
+	- pull/pullAll: 从数组中删除一项/多项值
+	  e.g. 删除student集合中,名称为Dekie的77分成绩
+	  db.student.update(
+		{name:"Dekie"},
+		{$pull:{score:77}},
+		false,
+		true
+	  )
+	  
+	  e.g. 从数组中删除多个值
+	  db.student.update(
+		{name:"David"},
+		{$pullAll:{score:[90,99]}},
+		false,
+		true
+	  )
+
+作业:
+利用上一次创建的orders集合和插入的数据,编写
+如下语句
+1)查找所有状态为1的订单	  
+2)查找所有状态不为1的订单
+3)查找某个客户状态为1的订单	
+4)查找所有订单信息,结果中不显示_id域
+5)查找所有状态在[1,3,4]中的订单
+6)查找所有包含两件商品的订单
+7)查找某个时间点以后下的订单	  
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+  

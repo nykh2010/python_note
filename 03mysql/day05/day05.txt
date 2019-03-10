@@ -1,0 +1,245 @@
+Day04回顾
+1. 索引
+  1. 普通索引(MUL) && 唯一索引(UNI)
+	  普通索引无约束,唯一索引字段值不允许重复,可以为NULL
+	2. 主键(PRI) && 自增长(auto_increment)
+	  1. 创建
+		  id int primary key auto_increment,
+			primary key(id)
+			alter table 表名 add primary key(字段名);
+		2. 删除
+		  1. alter table 表名 modify id int;
+			2. alter table 表名 drop primary key;
+		3. 指定自增长起始值
+		  1. create table 表名(...)auto_increment=10000;
+			2. alter table 表名 auto_increment=10000;
+  3. 外键
+	  1. 使用规则
+		  1. 数据类型要一致
+			2. 主表被参考字段一定为Key的一种
+		2. 语法格式
+		  constraint 外键名 foreign key(字段名) 
+			references 主表(字段名)
+			on delete 级联动作
+			on update 级联动作
+		3. 级联动作
+		  1. cascade : 删除更新同步
+			2. restrict(默认) : 不让主表去删除 更新
+			3. set null : 删除更新,从表该字段值设置为NULL
+		4. 删除
+		  1. show create table 表名;
+			2. alter table 表名 drop foreign key 外键名;
+2. 锁
+  1. 锁分类
+	  1. 锁类型 : 读锁 写锁
+		2. 锁粒度 : 行级锁 表级锁
+3. 存储引擎基本操作
+  mysql> show engines;
+	mysql> show create table 表名;
+	mysql> create table 表名(...)engine=InnoDB;
+	mysql> alter table 表名 engine=MyISAM;
+4. 存储引擎
+  1. InnoDB : 支持外键 事务 行级锁 共享表空间
+	2. MyISAM : 支持表级锁 独享表空间
+	3. MEMORY : 表记录存储在内存里
+  4. 如何选择
+	  1. 查询操作多 : MyISAM
+    2. 写操作多 : InnoDB
+5. 数据备份和恢复
+  1. 备份 : mysqldump -uroot -p 源库名 > XXX.sql
+	  --all-databases
+		库名
+		-B 库1 库2 
+		库名 表1 表2 表3
+  2. 恢复 : mysql -uroot -p 目标库名 < XXX.sql
+	  --one-database
+		1. 先创建空库再恢复
+		2. 库中新增表不会删除,新增记录就会被覆盖
+6. 授权
+  1. 开启远程连接
+	  sudo -i
+		cd /etc/mysql/mysql.conf.d/
+		vi mysqld.cnf
+		  # bind-address=127.0.0.1
+		service mysql restart
+	2. 授权语句
+	  mysql> grant all privileges on *.* to "lion"@"%" identified by "123456" with grant option;
+7. 数据导入
+  1. 创建对应的表
+	2. 拷贝文件
+	  mysql> show variables like "secure_file_priv";
+		sudo cp .... .... 
+	3. 执行数据导入语句
+	  load data infile "/var/lib/mysql-files/XXX.csv"
+		into table 表名
+		fields terminated by ","
+		lines terminated by "\n"
+  4. 修改权限
+	  chmod 644 文件名
+		  r : 4
+			w : 2 
+			x : 1
+		  644 : rw-r--r--
+8.数据导出
+  select .... from 表名 where ...
+	into outfile "/var/lib/mysql-files/XXX.csv"
+	fields terminated by ","
+	lines terminate by "\n"
+****************************************
+Day05笔记
+1. ER模型(Entry-Relationship)
+  1. 实体关系数据模型,用于数据库的设计
+	2. 实体(矩形框) : 1个学生 1本书
+	3. 属性(椭圆形) : 实体具有的某种特性
+	  学生 : 姓名 年龄 成绩 专业
+	4. 关系 : 实体之间的关系
+	  1. 一对一(1:1) : 老公和老婆
+		  A中1个实体,在B中只有1个实体与其发生关联
+			B中1个实体,在A中只有1个实体与其发生关联
+		2. 一对多(1:n) : 父亲和孩子
+		3. 多对多(m:n) : 兄弟姐妹对兄弟姐妹
+  5. 数据库中关系的实现
+	  1:1实现 : 主外键关联,添加唯一约束
+    1:n实现 : 主外键关联
+		m:n实现 : 通过中间表实现
+2. 事务和事务回滚
+  1. 定义 : 一件事从开始发生到结束的整个过程
+  2. 作用 : 确保数据的一致性
+	3. 事务操作
+	  1. 开启事务
+		  mysql> begin;
+		2. 终止事务
+		  mysql> commit;  或者  rollback;
+	  3. 应用场景
+		  1. 背景
+		    你 : 建行卡
+			  你朋友 : 工商卡
+			  你到建行自动取款机给你朋友转5000
+      2. 建表
+			  表1 : CCB   name  money
+				表2 : ICBC  name  money
+			3. 转账过程
+			  mysql> begin;
+				mysql> update CCB set money=money-5000 where name="有钱人";
+				mysql> update ICBC 宕机了......;
+				mysql> rollback;
+			4. 注意
+			  事务只针对于表记录的增删改,对库和表操作无效
+3. 与Python交互
+  1. python3 : pymysql
+	   python2 : MySQLdb
+	2. 安装
+	  sudo pip3 install pymysql
+		sudo pip install mysql-python
+  3. pymysql使用流程
+	  1. 创建数据库连接对象
+		2. 创建游标对象
+		3. 利用游标对象的execute()方法执行SQL命令
+		4. commit
+		5. 关闭游标
+		6. 断开连接
+	4. pymysql.connect(....)参数
+	  1. host : 主机地址 host="localhost"
+		2. user : 用户名   user="root"
+		3. password : 密码 password="123456"
+		4. database : 库名 database="db5"
+		5. port     : 端口 port=3306
+		6. charset  :      charset="utf8"
+  5.数据库连接对象(db)的方法
+	  1. db.cursor()   : 创建游标对象
+		2. db.commit()   : 提交
+		3. db.rollback() : 回滚
+		4. db.close()    : 关闭
+	6.游标对象(cursor)的方法
+	  1. cursor.execute('sql语句') : 执行sql命令
+		   execute('sql语句',列表)
+			   第二个参数必须为列表传参
+				 ins = 'insert into t1 values(%s,%s,%s)'
+				 cursor.execute(ins,[id,name,score])
+		2. cursor.close() : 关闭游标对象
+		3. cursor.fetchone() : 取1条,结果为 元组
+		4. cursor.fetchmany(n) : 取n条,((),(),(),())
+		5. cursor.fetchall() : 取所有,((),(),(),())
+4. MySQL调优
+  1. 选择合适的存储引擎
+	  1.读操作多 ：MyISAM
+		2.写操作多 ：InnoDB
+	2. 创建索引
+	  在select where order by常涉及到的字段建立索引
+	3. SQL语句优化(避免全表扫描)
+	  1. where子句中,尽量不使用 != ,否则放弃索引全表扫描
+		2. 尽量避免 NULL 判断,否则 ... ...
+		  优化前 ：select num from t1 where num is null;
+			优化后 ：
+			  在num字段设置一个默认值0,确保num字段没有NULL
+				select num from t1 where num=0;
+    3. 尽量避免用 or 连接条件,否则 ... ...
+		  优化前 ：select id from t1 where id=10 or id=20;
+			优化后 ：
+			  select id from t1 where id=10
+				union all
+				select id from t1 where id=20;
+		4. 模糊查询尽量避免使用前置 % ,否则 ... ...
+		  select name from t1 where name like "%c%";
+		5. 尽量避免使用 in 和 not in
+		  优化前 ：select id from t1 where id in(1,2,3,4);
+			优化后 ：
+			  select id from t1 where id between 1 and 4;
+		6. 尽量避免使用 select * ...,不要返回用不到的任何字段
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+环境准备:
+create database db5 charset utf8;
+use db5;
+create table t1(
+id int primary key auto_increment,
+name varchar(20),
+score float(5,2)
+)charset=utf8;
+insert into t1(name,score) values
+("李白",60),("杜甫",75),("白居易",80);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

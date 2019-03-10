@@ -1,0 +1,308 @@
+王伟超
+wangweichao@tedu.cn
+Day02回顾
+1、mv(剪切、重命名)
+	mv 源文件 目标文件
+	mv 源目录 目标目录
+2、cat
+	cat 文件名
+3、more
+	more 文件名
+		空格 翻屏
+		回车 下一行
+		q    退出
+4、date
+	date +%F
+	date +%H:%M:%S
+5、head
+	head -n 文件名
+6、tail
+	tail -n 文件名
+7、find
+	find 位置 -name "文件名/目录名"
+8、grep
+	在文件中查找指定内容的行
+	grep "内容" 文件名
+9、wc
+	wc -l 文件名
+	wc -l /etc/passwd
+10、tar
+	1、打包压缩
+		tar -zcvf 压缩包名字.tar.gz 文件1 文件2 目录3
+	2、解压缩
+		tar -zxvf 压缩包名字.tar.gz -C 路径
+		简写：tar xf 压缩包名字.tar.gz 
+11、echo
+12、输出重定向 >
+	ls > a.txt
+	1、如果文件存在,则会覆盖原文件中内容
+	2、如果文件不存在,则创建新文件
+13、输出追加重定向 >>
+
+Day03笔记
+1、Linux命令
+	1、| 管道符
+		1、作用：把前面命令的输出,作为后面命令的输入
+		2、格式：命令1 | 命令2 | 命令3 ...
+		3、示例
+			cat /etc/passwd | head -5
+		4、练习
+			1、在/tmp下创建目录guandao
+				mkdir /tmp/guandao
+			2、在guandao中创建文件 file1.txt 和 file2.txt
+				cd /tmp/guandao
+				touch file1.txt file2.txt
+			3、在终端执行 ifconfig(查看本机IP地址)命令,将输出重定向到file1.txt中
+				ifconfig > /tmp/guandao/file1.txt
+			4、查看file1.txt的前5行内容中带有 "广播" 两个字的行(管道)
+				head -5 file1.txt | grep "广播"
+				cat file1.txt | head -5 | grep "广播"
+			5、用echo命令在file1.txt文件的末尾添加如下内容：敌军还有5秒到达战场...
+				echo "敌军还有5秒到达战场..." >> file1.txt
+			6、用vi在file1.txt文件的末尾添加如下内容：
+				从此刻开始,战场由我一人主宰！
+			7、将file1.txt中后三行内容里面带有"战场"两个字的行追加到file2.txt中(管道)
+				tail -3 file1.txt | grep "战场" >> file2.txt
+	2、ifconfig
+		查看网络配置
+	3、ping
+		测试网络的连接状态
+		ping IP地址/域名
+	4、文件权限
+		1、查看文件权限 : ls -l 文件名
+			-rw-rw---- 1 tarena tarena 0 6月 3 10:21 a.txt
+		2、最左侧一列代表类型：
+			1、- ：代表文件
+			2、d ：代表目录
+		3、权限
+			r : 表示有读权限
+			w : 表是有写权限
+			x :	执行权限
+		4、rwx有三组：
+			第一组：文件所有者的权限
+			第二组：文件所属组的权限
+			第三组：其他用户所具有的权限
+	5、修改文件权限chmod
+		1、命令格式
+			chmod 选项 文件名
+				+r 增加读权限, -r 去掉读权限
+				+w 、-w 、+x 、-x
+				可以任意组合：+rw 、+wx 、-rwx
+		2、分类
+			a ---> 所有用户(all)
+			u ---> 所有者(user)
+			g ---> 同组用户(group)
+			o ---> 其他用户(other)
+				chmod u+x a.txt
+		3、用数字给文件设定权限
+			r : 4
+			w : 2
+			x : 1
+			file1.txt : u->最高 g->可读可写 o->没有权限
+			chmod 760 file1.txt
+			chmod 777 file1.txt
+			chmod 666 file1.txt
+		4、练习
+			1、在用户主目录下创建一个文件: 密函.txt
+				cd
+				touch 密函.txt
+			2、用echo命令在文件中写入：
+				echo "此密函只允许我一个人看" > 密函.txt
+			3、查看 密函.txt 的权限
+				ls -l 密函.txt
+			4、将 密函.txt 的权限设置为只能自己可读可写可执行,其他所有用户没有任何权限
+				chmod 700 密函.txt
+			5、在 4 的基础上将权限设置为同组的用户可以看,但是是只读文件
+				chmod 740 密函.txt
+			6、将 密函.txt 的可执行权限给去掉
+				chmod -x 密函.txt
+	6、sudo
+		获取root权限来执行Linux命令
+		sudo Linux命令
+	7、快捷键
+		1、ctrl + l 清屏
+		2、crtl + c 终止当前命令执行
+		3、init 0 关机
+		4、init 6 重启/reboot
+		5、ctrl + shift + "+" 终端字体放大
+		6、ctrl + "-" 终端字体缩小
+		7、ctrl + s 隐藏终端输出
+		8、ctrl + q 恢复终端输出
+		9、上下光标 ：翻出之前执行过的命令
+2、Python
+	1、Python版本
+		1、Python2版本
+		2、Python3版本
+			python3.5(环境)
+			python3.7
+	2、Python优缺点
+		1、优点
+			1、对数据的处理
+			2、开发效率高
+		2、缺点
+			执行效率低
+3、我的第一个Python程序
+	1、在终端输出：hello world
+		1、打开sublime编辑器
+		2、新建 py 文件：hello.py
+		3、输入 print("hello world")
+		4、右键 -> open terminal here ...
+		5、python3 hello.py
+4、Sublime代码编辑器(码农最喜欢的代码编辑器之一)
+	1、保存 ：ctrl + s
+	2、回退 ：ctrl + z
+	3、前进 ：ctrl + shift + z
+	4、注释/取消注释 ：ctrl + /
+	5、缩进 ：tab
+	6、往回缩进 ：shift + tab
+	7、同时选中多个光标 ：ctrl + 鼠标左键单击
+	8、新建窗口 ：双击上面空白处 / ctrl + n
+	9、显示侧边栏 ：ctrl + k + b
+								view -> Side Bar -> Show Side Bar
+		打开新的路径：File -> open Folder ...
+5、Python交互解释器
+	1、进入
+		$ python3
+	2、退出
+		>>> exit()
+		>>> quit()
+6、标准输出函数 print()
+	1、作用 ：把内容输出到终端
+	2、示例
+		print("Hello Python.I am comming!")
+	3、换行连接符 \
+		print("I have a dream.I will make a lot of \
+		money.我有一个梦想,将来会赚很多钱!")
+	4、练习
+		1、star.py 在终端输出如下内容：
+					 *
+					***
+				 *****
+				*******
+		2、shi.py 在终端输出如下内容(要求代码美观易读)：
+			少小离家胖了回,乡音无改肉成堆。儿童相见不相识,笑问胖子你是谁。
+7、python中双引号、三引号的区别
+	1、三引号(所见即所得)
+		三引号输出可换行
+	2、练习
+		1、game.py 在终端实现如下输出：
+			(0)石头
+			(1)剪刀
+			(2)布
+			(q)退出游戏
+			请出拳(0/1/2/q):
+		2、menu.py 在终端实现如下输出：
+			欢迎使用XXX学生信息管理系统
+			(1)查询学生信息
+			(2)添加学生信息
+			(q)退出
+			请做出你的选择(1/2/3/q):
+8、Python运算符
+	1、运算符
+		+
+		-
+		* 乘
+		/ 除
+		% 取余
+		// 地板除
+	2、练习
+		1、假如你现在25周岁,每年365天,计算你过了多少个星期天
+		2、一个圆的半径为3cm,计算圆的周长和面积分别是多少？
+			半径为3cm的圆的周长为：？厘米
+			半径为3cm的圆的面积为：？平方厘米
+			3.14*2*半径
+			3.14*r**2
+		3、从凌晨0:0:0计时,到现在过了63320秒,请问现在是几时 几分 几秒
+			提示：// % 
+9、占位符(字符串格式化)
+	1、格式
+		格式化字符串 % (参数值1,参数值2)
+	2、占位符
+		%s 占位：字符串
+		%d 占位：整数
+		%f 占位：浮点数
+	3、练习
+		1、定义两个变量,name的值为 关羽, gongji 的值为 666,在终端输出：关羽的攻击力为666
+
+		2、定义3个变量,name,gongsi,salary,在终端输出：
+			...入职..公司,薪资为...元！
+
+		3、定义两个变量,computer,you,值分别为：石头 剪刀,在终端输出：
+			电脑出拳：石头 你的出拳：剪刀 你输了！
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

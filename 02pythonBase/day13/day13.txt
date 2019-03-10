@@ -1,0 +1,268 @@
+day12回顾
+  闭包
+    函数引用了除自己的局部变量以外的变量
+
+    三个条件:
+        要有内嵌函数
+        内函数还要外部变量
+        返回内嵌函数
+  装饰器
+    @mydeco
+    def myfun(...):
+        语句块
+
+  实质:
+    def myfun(...):
+        语句块
+    myfun = mydeco(myfun)
+  
+  模块 Module:
+    将函数进行分类包装
+  三条导入语句:
+    import 模块名
+    from 模块名 import 属性
+    from 模块名 import *
+
+  dir() 函数
+
+  三个模块:
+    math 模块
+    time 模块
+    sys 模块
+
+
+
+day13笔记:
+自定义模块 
+  要求：
+    模块名文件后缀必须以.py
+    模块文件名必须是合法的标识符
+    避免名称和内建模块冲突
+  
+  合法文件名:
+     mymod.py   aaa.py
+  不合法的:
+     123.py  # import 123
+     math.py  # 冲突
+
+  导入方式:
+    import 语句
+    from import 语句
+    from import * 语句
+  示例见:
+    mymod.py
+    test_mymod.py
+
+import 语句搜索模块的路径顺序:
+    1. 搜索内建模块
+    2. 搜索程序的运行时路径(当前路径)
+    3. 搜索sys.path 提供的路径
+
+
+模块的加载过程
+  在模块导入时，模块的所有语句会执行
+  如果一个模块已经导入，则再次导入时不会重新执行模块内的语句
+
+模块的重新加载:
+  import mymod
+  import imp
+  imp.reload(mymod)  # 重新加载mymod模块
+
+模块被导入和执行的过程
+  模块的编译
+                编译               解释执行
+    mymod.py   ----->   mymod.pyc -----> python3
+
+
+
+模块的属性
+  模块的__doc__属性
+    用于绑定模块的文档字符串
+
+  __file__属性
+    用于绑定模块的文件路径名
+
+  __name__属性
+    用来记录模块自身的名字
+    说明:
+      1. 当此模块作为主模块(也就是第一个运行的模块)运行时，__name__绑定:'__main__'
+      2. 当此模块不是主模块时，它绑定模块名
+
+
+模块的 __all__ 列表
+  模块中的__all__列表是一个用来存入可导出属性的字符串列表
+  作用:
+    限制用from xxx import * 导入时导出属性的个数
+  示例见:
+    mymod2.py
+
+模块的隐藏属性
+  模块中以'_' 开头的属性 在from xxx import * 导入时不被导入，通常称这些属性为隐藏属性
+
+  示例见:
+    mymod3.py
+
+随机模块 
+  random
+  作用:
+    用于模拟或生成随机输出的模块
+
+  文档参见:
+    python_base_docs_html/随机模块random.html
+
+包(模块包) package
+  包的定义
+    包是将模块以文件夹的组织形式进行分组管理的方法
+  作用:
+    将一系列模块进行分类管理，有利于防止命名冲突
+    可以在需要时加载一个或部分模块，而不是全部模块
+  包示例:
+    mypack/
+        __init__.py
+        menu.py
+        games/
+            __init__.py
+            contra.py
+            supermario.py
+            tanks.py
+        office/
+            __init__.py
+            world.py
+            except.py
+
+包的导入:
+  # 同模块的导入类似
+  import 包名 [as 包别名]
+  import 包名.模块名 [as 模块新名]
+  import 包名.子包名.模块名 [as 模块新名]
+  ...
+  
+  from 包名 import 模块名 [as 模块新名]
+  from 包名.子包名 import 模块名 [as 模块新名]
+  from 包名.子包名.模块名 import 属性名 [as 属性新名]
+  ...
+
+  from 包名 import *
+  from 包名.模块名 import *
+  ...  
+
+  示例:
+    import mypack.games.tank
+    mypack.games.tank.play()
+    import mypack.games.tank as tank
+    tank.play()
+
+    from mypack.games import contra
+    contra.play()
+    from mypack.menu import show_menu
+    show_menu()
+
+
+
+__init__.py文件
+  __init__.py 是常规包内必须存在的文件,此文件会在包加载时自动调用
+  作用:
+    编写此包的内容
+    在内部填写文件字符串
+  示例见:
+    mypack/__init__.py
+
+__init__.py 内的__all__列表
+  作用:
+    用来记录此包中有哪儿些子包或模块需要导入
+    当用from 包 import * 语句导入时，只查找__all__中所在模块或子包
+
+  说明:
+    __all__ 列表只在from xxx import *时起作用
+
+  
+包的相对导入:
+  包的相对导入是指包内模块的相互导入
+
+  语法:
+    from 相对路径包或模块 import 属性或模块名
+    或
+    from 相对路径包或模块 import *
+  相对路径:
+    在 from 和 import 间可以用相对路径
+    . 代表当前目录
+    .. 代表上一级目录
+    ... 代表上二级目录
+    .... 以此类推
+    注: 相对导入时不能超出包的外部
+
+
+包的加载搜索路径:
+  1. 当前工作路径(当前目录)
+  2. sys.path指定的路径
+
+
+
+异常（基础) exception
+  什么是错误
+    错误是指由于逻辑或语法等导致一个程序无法正常执行的问题
+  什么是异常
+    异常是程序出错时标识的一种状态
+    当异常发生时，程序不会再向下执行，而转入异常处理流程到调用函数的地方待处理此错误并恢复为正常状态
+  作用:
+    用作信号通知,通知上层调用者有错误产生需要处理
+
+
+try语句的两种语法:
+  try-except语句
+  try-finally语句
+
+try-except语句
+  语法:
+    try:
+        可能触发异常的语句
+    except 错误类型1 [as 变量1]:
+        异常处理语句1
+    except 错误类型2 [as 变量2]
+        异常处理语句2
+    except (错误类型3, 错误类型4) [as 变量3]:
+        异常处理语句3
+    ...
+    except:
+        异常处理语句other
+    else:
+        未发生异常语句
+    finally:
+        最终语句
+  作用:
+    偿试匹配异常类型来捕获异常，把程序由异常流程转为正常流程
+  示例见:
+    except1.py
+  说明:
+     except 子句可以有一个或多个，但至少要有一个
+     else  子句可以有0个或1个
+     finally 子句可以有0个或1个
+     
+
+练习:
+  1. 写一个函数 get_score() 来获取用户输入的学生成绩(0~100)整数
+  如果用户输入出现异常，则此函数返回0,否则近观回用户输入的成绩，同时保存这个成绩一定在0~100之间
+  def get_score():
+      ....
+
+  score = get_score()
+  print("学生的成绩是:", score)
+
+  2. 猜数字游戏:
+    随机生成一个0~100之间的整数，用变量x绑定
+    让用户输入一个数y,输出猜数字的结果
+       1) 如果y等于x，则提示"恭喜您猜对了"， 并退出程序
+       2) 如果y大于x,则提示"您猜的数字大了"
+       3) 如果y小于x,则提示"您猜的数字小了"
+    直到猜对为止，退出程序时显示用户猜数字的次数
+    
+
+  
+
+
+
+
+
+
+
+

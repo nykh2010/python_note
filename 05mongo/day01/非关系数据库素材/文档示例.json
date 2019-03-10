@@ -1,0 +1,14 @@
+{
+	"acct_no":"622345111111", 
+	"acct_name":"张大大",
+	"acct_type":1,
+	"balance": 2500.00
+	"cust_info": {
+		"cust_id": "C0001",
+		"cust_name":"张大大",
+		"cert_type":"身份证",
+		"cert_no":"513844199001010001",
+		"tel_no":"13512345678",
+		"address":"北京市中关村南路XXX号X栋X单元"
+	}
+}

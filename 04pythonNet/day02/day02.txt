@@ -1,0 +1,291 @@
+day01回顾
+网络编程
+  传输数据(字节数据)
+
+OSI模型（七层)
+  应用层(Http, Ftp, Https, ssh, telnet)
+  表示层(表示,加密,解密...)
+  会话层(建立,管理连接)
+  传输层(端口号,用来区分当前主机上的哪儿个进程)
+  网络层(IP地址,用来标识当前网络上的主机,负责网络的路径选择)
+         IPv4 / IPv6
+  数据链路层(MAC 地址(64位),硬件地址)
+  物理层(数据的传送)
+
+
+
+TCP/IP 模型
+  五层模型
+      应用层
+      传输层
+      网络层
+      链路层
+      物理层
+  四层模型
+      应用层
+      传输层
+      网络层
+      物理链路层
+
+协议
+  IP协议, TCP协议,HTTP协议
+
+网络编程的术语
+  IP地址:
+    IPv4(32位)  212.106.115.32
+    IPv6(128位)
+  端口号 port
+    区分当前应用程序的
+    (16位)  0 ~ 65535
+
+网络相关的命令:
+  ping ipv4地址(或域名)
+  ifconfig/ipconfig  查看网络设备信息
+
+UDP协议
+  无连接,不可靠,数据报协议
+
+
+套接字
+  socket.socket(family=socket.AF_INET, 
+                type=socket.SOCK_STREAM, proto=0)
+  创建用来网络的通信的套接字
+
+UDP通信步骤:
+  服务器端
+    1.创建套接字
+      udp_server = socket.socket(socket.AF_INET,
+                     socket.SOCK_DGRAM, 0)
+
+    2. 绑定地址和端口号. bind方法
+      udp_server.bind( (IP地址字符串, 端口号整数))
+
+    3. 收发数据
+      1) 接收数据
+      recv_bytes, addr = udp_server.recvfrom(
+                  最大字节数)
+      2) 发送数据
+       send_byte_count =  udp_server.sendto(
+                    send_bytes, 地址信息)
+    4. 关闭套接字
+       udp_server.close()
+  客户端
+    1.创建套接字
+      udp_server = socket.socket(socket.AF_INET,
+                     socket.SOCK_DGRAM)
+
+    2. 绑定地址和端口号(可选)
+    3. 收发数据
+    4. 关闭套接字
+
+UDP广播
+  设置广播选项:
+    upd_socket.setsockopt(socket.SOL_SOCKET,
+                         SO_BROADCAST, 1)
+  广播地址:
+    网段中的最大地址
+    udp_socker.sendto(要发送的字节串,
+              (广播地址字符串, 端口号))
+
+
+
+day02 笔记:
+TCP 协议(Tranformation Control Protocal)
+   1. 传输层协议(保证数据传输的可靠性)
+
+  说明:
+    面向连接的,可靠的,字节流协议
+
+    面向连接:
+      在通信之间先建立连接,双方都确认对方存在时才进行通信
+    可靠:
+      通过重传,肯定确认机制保证数据的可靠性
+    字节流协议
+      通过包的序号保证数据包的有序和连续
+      字节流不分边界
+
+TCP 连接(三次握手)
+  1. 客户端向服务器发送连接标识变量表示请求连接
+  2. 服务器端收到请求后,回变量标志确定可连接
+  3. 客户端收到回复,发送最终连接标志建立连接
+
+TCP 断开连接(四次挥手)
+  1. 主动方发送标志,表示请求断开连接
+  2. 被动方收到请求后立即复信息表求已经接受请求
+  3.被动方消息处理完毕再次发送标志表求已经准备可以断开
+  4. 主动方收到被动方标志,发送最终断开标识,连接断开
+
+
+TCP套接字编程
+  服务器
+    1. 创建套接字(socket.socket)
+    2. 绑定地址(bind)
+    3. 设置监听(listen)
+    4. 等待处理客户端请求连接(accept)
+    5. 收发数据消息(recv/send)
+    6. 关闭套接字(close)
+  客户端
+    1. 创建套接字(socket.socket)
+    2. 请求连接服务器 connect
+    3. 收发数据消息(recv/send)
+    4. 关闭套接字(close)
+
+
+服务器端接口
+  1. 创建套接字
+    函数:
+      from socket import *
+      tcp_server = socket(family=AF_INET, 
+                          type=SOCK_STREAM,
+                          proto=0)
+    参数:
+      family 地址族
+        AF_INET(IPv4默认)
+        AF_INET6(IPv6)
+        ...
+      type 套接字类型
+        SOCK_STREAM(字节流式套接字,TCP协议,默认)
+        SOCK_DGRAM(数据报式套接字, UDP协议)
+        ...
+      proto 协议号
+         默认为0, 通常只对AF_CAN协议起作用
+    返回值:
+      套接字对象
+
+  2. 绑定地址(bind)
+    方法名:
+      socket.bind(address_info)
+    作用:
+      绑定本机网络地址
+    参数:
+      元组(IP地址字符串, 端口号整数)
+
+  3. 设置监听(listen)
+    方法名:
+      socket.listen([backlog])
+    作用:
+      将套接字设置为监听套接字关创建监听队列
+    参数
+      backlog
+        设置监听队列的大小(此值对Linux不起作用)
+
+  4. 等待处理客户端请求连接(accept)
+    方法:
+      socket.accept()
+    作用:
+      阻塞等待处理客户端请求
+    返回值: (socket_object, address_info) 元组
+      socket_object 连接的客户端套接字
+      address_info 连接的客户端的地址信息
+    说明:
+      默认为阻塞
+
+  5. 收发数据消息(recv/send)
+    接收消息
+      方法:
+        socket.recv(bufsize)
+      作用:
+        接收消息 
+      参数:
+        bufsize 最多接收的字节数
+      返回值:
+        接收到的消息的字节串数据,当客户端有数据发送时,至少收到一个字节,当客户端关闭时,返回空字节串
+
+    发送消息
+      方法:
+        socket.send(bytes)
+      参数:
+        bytes 发送的字节数据
+      返回值:
+        成功发送的字节数
+  6. 关闭套接字(close)
+    方法:
+      socket.close()
+    作用:
+      关闭套接字,断开连接(TCP协议是四次挥手)
+
+客户端
+  1. 创建套接字(socket.socket)
+     同服务器端完全一致(略)
+  2. 请求连接服务器 connect
+    方法:
+      socket.connect(address_info):
+    参数:
+      address_info 地址信息
+    作用:
+      与服务器建立连接(三次握手)
+    失败: 触发 OSError类型的错误
+
+  3. 收发数据消息(recv/send)
+     同服务器端完全一致
+  4. 关闭套接字(close)
+     同服务器端全完一致
+
+示例见:
+  tcp_server.py
+  tcp_client.py
+
+套接字方法:
+  getsockname() 获取套接字绑定的地址
+  getpeername()  连接套接字获取连接地址
+  setsockopt(level, option, value)
+    参数:
+      level 选项类别 SOL_SOCKET
+      option 每个选项类别对应的子选项
+         SO_BROADCAST
+         SO_REUSERADDR
+         ....
+      value 对选项设置值
+    说明:
+      此方法需要创建套接字后立即设置
+
+
+
+小结:
+  TCP套接字和UDP套接字的区别
+    1. TCP套接字是流式套接字,以字节流方式传输数
+       据, UDP套接字则以数据报形式传输
+  2. TCP传输有粘包,UDP不会
+  3. TCP保证传输的可靠性,UDP不保证
+  4. TCP需要listen, accept, UDP不需要
+  5. TCP使用send/recv, UDP使用sendto/recvfrom来
+     收发数据
+
+
+TCP应用之HTTP传输
+
+域名
+  网络服务器的别名
+  作用:
+    1. 方便记忆
+    2. 表达一定的含义
+  示例:
+    www.baidu.com
+    www.tedu.cn
+主机名
+  网络上标识一台主机的逻辑名字
+  特例:
+    localhost 指本机 即对应IP地址为:127.0.0.1
+
+HTTP协议端口号默认为 80
+
+HTTP 超文本传输协议 应用层协议
+用途:
+  网页的获取和数据传输
+
+
+Http 请求: request
+  请求格式:
+    请求行: 具体的请求类型和请求路径
+      格式:
+        GET  /user/login.html HTTP/1.1
+      请求类型
+         GET 获取网络资源
+         POST 提供一定的信息,得到反馈
+         DELETE 删除服务器资源
+         PUT 更新网络资源
+    请求头(对请求内容的基本描述)
+      Accept-Encoding: gzip ....
+      Accept-Language: zh-CN, zh....
+      Cache-Control: max-age=0
+      ....

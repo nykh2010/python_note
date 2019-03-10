@@ -1,0 +1,266 @@
+Day03回顾
+1. 日期时间函数
+  1. NOW()
+	2. CURDATE()
+	3. CURTIME()
+	4. YEAR(字段名)
+	5. DATE(字段名)
+	6. TIME(字段名)
+2. 日期时间运算
+  select ... from 表名 
+	where 字段名 运算符(now()-interval 1 day)
+3. SQL查询
+  1. 聚合函数
+	  avg(...) sum() max() min()
+		count(字段名) ##空值NULL不会被统计
+	2. group by : 查询结果进行分组
+	  如果select后的字段名没有在group by之后出现,则必须要对该字段进行聚合处理
+	3. having语句
+	  where只能操作表中实际存在的字段
+		having可以操作聚合函数生成的显示列
+	4. distinct
+	  select distinct 字段1,字段2 from 表名;
+	5. 做数学运算
+	  select 字段1*2 as name1,字段2+10 as name2 from 表名;
+2. 嵌套查询(子查询)
+  把内层的查询结果作为外层的查询条件
+3. 多表查询
+  1. 笛卡尔积 : 不加where条件
+	2. 多表查询 : 加where条件
+4. 连接查询
+  1. 内连接 : 只显示匹配到的结果
+	2. 外连接
+	  1. 左连接
+		2. 右连接
+	3. select 字段名 from 表1 inner/left/right join 表2 on 条件;
+5. 约束
+  1. 非空约束(NOT NULL)
+	2. 默认约束(DEFAUT 值)
+	  id int not null default 0
+6. 索引(BTREE)
+  1. 优点 : 加快数据的检索速度
+	2. 缺点 : 占用物理存储空间,索引需要动态维护,占用系统资源
+  3. SQL命令运行时间监测
+	  1. 开启 : set profiling=1;
+		2. 查看 : show profiles;
+		3. 关闭 : set profiling=0;
+************************************
+Day04笔记
+1. 索引分类
+  1. 普通索引(index) && 唯一索引(unique)
+	  1. 使用规则
+		  1. 可设置多个字段
+			2. 普通索引: 无约束, 唯一索引:字段值不允许重复,但是可以为NULL
+			3. KEY标志 普通索引: MUL 唯一索引:UNI
+		2. 创建
+		  index(字段名),
+			index(字段名),
+			unique(字段名),
+			unique(字段名));
+			
+			create unique index 索引名 on 表名(字段名);
+	  3. 查看
+		  1. desc 表名;  --> KEY标志
+			2. show index from 表名\G;
+		4. 删除
+		  drop index 索引名 on 表名;
+			## 删除索引只能一个一个删
+  2. 主键索引(primary key)
+	   自增长(auto_increment)
+    1.使用规则
+		  1. 只能有1个字段
+			2. 约束 ：不允许重复,且不能为NULL
+			3. KEY标志 ：PRI
+			4. 通常设置记录编号的字段id,能够唯一锁定1条记录
+		2. 创建
+		  id int primary key auto_increment,
+			指定起始值 ：
+			create table 表名(
+			... ...
+			)auto_increment=10000,charset=utf8;
+			已有表指定自增长起始值：
+			alter table 表名 auto_increment=10000;
+    3. 已有表中添加主键
+		  alter table 表名 add primary key(id);
+		4. 删除
+		  1. 先删除自增长(modify)
+        alter table 表名 modify id int;
+			2. 删除主键(drop)
+			  alter table 表名 drop primary key;
+  3. 外键(foreign key)
+	  1. 让当前表字段的值从另个一表的范围内去选择
+		2. 语法格式
+		  foreign key(从表字段名)
+			references 主表(字段名)
+			on delete 级联动作
+			on update 级联动作
+		3. 使用规则
+		  1. 主表、从表字段数据类型要一致
+			2. 主表被参考字段 ：主键
+		4. 示例
+		  表1、缴费信息表(jftab)
+			  id   姓名    班级   缴费金额
+				 1  唐伯虎   AID06     200
+				 2  点秋香   AID06     200
+
+      表2、班级信息表(bjtab)
+			  stu_id  姓名   缴费金额
+			    1
+					2
+    5. 建表
+			create table jftab(
+			id int primary key,
+			name varchar(20),
+			class char(5),
+			money smallint
+			)charset=utf8;
+
+			insert into jftab values
+			(1,"唐伯虎","AID06",200),
+			(2,"点秋香","AID06",200),
+			(3,"祝枝山","AID06",200);
+
+			create table bjtab(
+			stu_id int,
+			name varchar(20),
+			money smallint,
+			foreign key(stu_id) references jftab(id)
+			on delete cascade
+			on update cascade
+			)charset=utf8;
+    6. 级联动作
+		  1. cascade
+			  数据级联删除、更新(参考字段)
+			2. restrict(默认)
+			  从表有相关联记录,不让主表操作
+			3. set null
+			  主表删除、更新时,从表相关联记录字段值设置NULL
+    7. 删除
+		  1. 查看外键名
+			  show create table 表名;
+			2. 删除
+			  alter table 表名 drop foreign key 外键名;
+		8. 已有表中添加
+		  alter table 表名 add foreign key(从表字段) 
+			references 主表(主表字段) 
+			on delete 级联动作
+			on update 级联动作
+2. 锁
+  1. 目的 ：解决客户端并发访问的冲突问题
+	2. 锁分类
+	  1. 锁类型
+		  1. 读锁(共享锁)
+			  select : 加读锁之后别人不能更改表记录,但是可进行查询
+			2. 写锁(互斥锁、排他锁)
+			  update : 加写锁之后别人不能查、不能改
+		2. 锁粒度
+		  1. 行级锁 ：InnoDB 可加读锁或者写锁
+			2. 表级锁 ：MyISAM 可加读锁或者写锁
+3. 存储引擎(处理表的处理器)
+  1. 基本操作
+	  1. 查看所有的存储引擎
+		  mysql> show engines;
+		2. 查看已有表的存储引擎
+		  mysql> show create table 表名;
+		3. 创建表指定
+		  create table 表名(...)engine=MyISAM;
+		4. 已有表指定
+		  alter table 表名 engine=InnoDB;
+	2. 常用存储引擎的特点
+	  1. InnoDB特点
+		  1. 支持外键、事务操作、行级锁
+			2. 共享表空间
+			  表名.frm  : 表结构和索引文件
+				表名.ibd  : 表记录
+		2. MyISAM特点
+		  1. 支持表级锁
+			2. 独享表空间
+			  表名.frm : 表结构
+				表名.myd : 表记录(my data)
+				表名.myi : 索引文件(my index)
+		3. MEMORY存储引擎
+		  表结构存储在硬盘里
+			表记录存储在内存里
+			服务/主机重启后,表记录消失,表结构还在
+  3. 如何决定使用哪个存储引擎
+	  1. 查询操作多的表 ：MyISAM(使用InnoDB浪费资源)
+		2. 更新操作多的表 ：InnoDB
+4. 数据备份(mysqldump,在Linux终端中操作)
+  1. 命令格式
+	  mysqldump -u用户名 -p 源库名 > XXX.sql
+  2. 源库名的表示方式
+	  --all-databases    :  备份所有库
+		库名               ： 备份单个库
+		-B 库1 库2 库3     ： 备份多个库
+		库名 表1 表2 表3   ： 备份多张表
+5. 数据恢复(mysql,在Linux终端中操作)
+  1. 命令格式
+	  mysql -u用户名 -p 目标库名 < XXX.sql
+	2. 从所有库的备份中恢复某1个库
+	  mysql -u用户名 -p --one-database 目标库名 < all.sql
+	3. 注意
+	  1. 恢复库时,如果恢复到原库,会将表中数据覆盖,新增表不会删除
+		2. 数据恢复时,如果要恢复的库不存在,则必须创建空库
+6. MySQL用户账户管理
+  1. 开启MySQL远程连接
+	  1. sudo -i
+		2. cd /etc/mysql/mysql.conf.d/
+    3. subl mysqld.cnf
+		  #bind-address=127.0.0.1
+		4. service mysql restart
+  2. 添加授权用户
+	  1. 用root用户登录mysql
+		2. 授权语句
+		  mysql> grant 权限列表 on 库名.表名 to "用户名"@"%"
+			       identified by "密码" with grant option;
+			权限列表 ：all privileges、select、update
+			库名.表名：*.* 、db4.* 、MOSHOU.sheng
+    3. 示例
+		  1. grant all privileges on *.* to "tiger"@"%" identified by "123" with grant option;
+			2. grant select on db4.* to "rabbit"@"%" identified by "123" with grant option;
+7. 数据导入
+  1. 把文件系统的内容导入到数据库表中
+  2. 步骤
+	  1. 在数据库中创建对应的表
+			create table scoretab(
+			id int,
+			name varchar(20),
+			score float(5,2),
+			phone char(11),
+			class char(7)
+			)charset=utf8;
+    2. 把文件拷贝到数据库的搜索路径中
+		  1. 查看搜索路径
+			  mysql> show variables like "secure_file_priv";
+			2. 复制
+			  sudo cp scoreTable.csv /var/lib/mysql-files/
+			3. 修改权限(根据实际情况)
+			  sudo -i
+				cd /var/lib/mysql-files
+				chmod 666 scoreTable.csv
+		3. 执行数据导入语句
+			load data infile "/var/lib/mysql-files/scoreTable.csv"
+			into table scoretab
+			fields terminated by ","
+			lines terminated by "\n"
+  3. 文件权限
+	  -rwxrw-r-- tarena tarena scoreTable.csv
+		 r ：读 4
+		 w ：写 2
+		 x ：可执行 1
+		 第1组 ：所有者
+		 第2组 ：所属组  用户名：tarena2,也属于tarena组
+		 第3组 ：其他用户 用户名：clause,属于 yunwei 组
+		 chmod 644 a.txt  : rw-r--r--
+8. 数据导出
+  1. 把数据库中表的记录导出到文件系统里
+	2. 语法格式
+	  select ... from 表名 where 条件
+		into outfile "/var/lib/mysql-files/a.csv"
+		fields terminated by ","
+		lines terminated by "\n"
+	3. 把MOSHOU库下的sheng表导出到sheng.csv
+	  select * from sheng 
+		into outfile "/var/lib/mysql-files/sheng.csv"
+		fields terminated by ","
+		lines terminated by "\n"

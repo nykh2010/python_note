@@ -1,0 +1,219 @@
+day01回顾
+pwd
+ls
+ -l :以列表的形式查看当前文件下的内容
+ -a :
+
+
+mkdir :
+ mkdir a b c
+ mkdir WAID1806/B/C -p
+touch :
+   touch a.txt b.txt c.txt
+   touch a.txt
+rm :rm 文件名
+  -r:删除文件夹
+  -f:强制删除
+  -i:是否有提示信息 
+  rm -rf 文件夹
+  rm -rf *
+rmdir:
+
+通配符：
+*：0个或者是多个字符
+？：一个字符
+
+vi/vim
+ 1、vi a.txt
+ 2、a i o -->插入模式/编辑模式
+ 3、ESC ->浏览模式 -shift+:-->命令行模式
+ 4、w
+    q
+    wq -->qw不能使用
+    q! 强制退出
+ 
+cp :cp 文件1 备份
+    cp 文件夹  备份  -r
+
+
+day02
+1、mv 
+  作用：剪切/复制
+  mv 文件名  路径信息
+ 练习：
+1、在day02文件夹下创建a.txt文件，在文件中输入如下内容：保存退出。
+  mv 
+  作用：剪切/复制
+  mv 文件名  路径信息
+2、使用拷贝命令，把a.txt文件拷贝到 day02 同级的目录下。
+3、删除 day02 文件夹下的a.txt
+4、移动a.txt 到day02下
+5、day02 文件夹下的a.txt 文件重名为b_a.txt
+   保留a.txt文件  cp a.txt b_a.txt
+   不保留a.txt文件 mv a.txt b_a.txt
+
+2、cat：查看文件的内容，输出到终端上
+   cat 文件名
+3、more命令
+    分屏显示数据
+    more 文件名
+    空格：翻页，翻到下一屏
+    回车：下一行
+    q:退出。
+4、date 
+   1.作用：显示日期
+   2.date +%F:显示年-月-日
+   3.date +%H:%M:%S显示时：分：秒
+
+5、head:
+    1、查看文件的前几行
+    2、head 文件名  显示前10行内容
+    3、head -n 文件名 显示前n行内容
+6、tail
+    1、查看文件后几行内容
+    2、tail 文件名 显示的后10行的内容
+    3、tail -n 文件名 显示文件的后n行内容
+
+练习：
+1、复制/etc/passwd 到day02文件夹下
+  cp /etc/passwd /home/tarena/WAID1806/Linux/day02
+2、把passwd文件重命名为b_passwd，删除passwd
+    mv passwd b_passwd
+3、在b_passwd文件中添加如下内容：
+   不要删除/etc/passwd
+4、使用more命令查看文件的内容
+    more b_passwd
+5、使用date命令查看系统的时间，格式年月日
+   date +%F
+6、使用命令查看当前时间，格式时分秒
+   date +%H:%M:%S
+7、显示b_passwd文件的前5行内容
+    head -5 b_passwd 
+8、显示b_passwd文件的后5行内容
+    tail -5 b_passwd
+9、把b_passwd文件内容显示到终端上。
+    cat b_passwd
+10、把b_passwd文件删除。
+    rm b_passwd
+
+7、find 
+   1、查找文件/目录文件所在的位置。
+   2、find 查找的位置 -name "文件名"
+   3、返回的是文件对应的路径信息。
+8、grep
+   1、查找指定的内容，返回的是行的内容
+   2、grep "内容" 文件名
+   3、示例：
+       grep "tarena" /etc/passwd
+练习：
+1、在用户主目录下创建新的目录文件PYTHON ，在PYTHON中创建如下几个文件， aa.txt bb.txt cc.txt dd.txt
+2、在aa.txt文件中插入如下内容。
+      7、find 
+   1、查找文件/目录文件所在的位置。
+   2、find 查找的位置 -name "文件名"
+   3、返回的是文件对应的路径信息。
+      8、grep
+   1、查找指定的内容，返回的是行的内容
+   2、grep "内容" 文件名
+   3、示例：
+       grep "tarena" /etc/passwd  
+3、在用户主目录下查找文件名是aa.txt的文件
+4、在PYTHON文件中查找以。txt结尾的文件
+5、在用户主目录，aa.txt文件中查找“grep”所在的行。
+
+ 
+9、wc 统计文件中的数据，行数，字数，字节数
+   -c (chars) 统计的是字节数
+   -l (lines) 统计的是行数
+   -w (words) 统计的是字数（使用空格键，跳格，换行字符分隔符）
+   
+
+练习：
+1、统计aa.txt文件有多少行
+2、统计aa.txt文件有多少字数？
+3、统计aa.txt 文件有多少字节数？
+4、将aa.txt文件重命名为b_aa.txt
+5、删除aa.txt文件？
+
+
+10、tar  打包或者解压缩
+     1、格式
+       tar -zcvf 压缩包文件名.tar.gz  目录/文件
+           -z(使用gzip对文件进行压缩)
+           -c(创建包create)
+           -v显示操作文件的细节
+           -f操作的文件名
+     2、解压缩：
+       tar -zxvf 压缩包.tar.gz -C 指定目录
+练习：
+1、在用户主目录下创建文件夹mydir1 mydir2
+   
+2、在mydir1中创建文件myfile1 myfile2 myfile3
+
+3、将mydir1 打包压缩为mydir1.tar.gz ,放到主目录下
+
+4、将mydir1.tar.gz 剪切到mydir2 中。
+
+5、将mydir1.tar.gz 解压缩。放到mydir2中。
+
+11、echo 显示文本
+格式：echo "文本"
+12、输出重定向： > 或 >>
+   1、作用：输出到终端中的内容指定输出到文件中
+   2、格式：命令 > 文件中
+            命令>>文件中
+          注意：命令要有数据输出到终端上。
+   3、示例：
+       ls -l > a.txt
+       ls -l >> a.txt
+   4、文件不存在，则会创建一个新的文件
+      使用>,文件存在，则覆盖原有的内容。
+      使用的>>， 文件存在，则在文件的末尾追加内容。
+        
+练习：
+1、在WAID1806文件夹下创建echo.txt文件
+2、使用vi 在echo.txt文件中输入如下内容。
+     今天的课程总算结束了，做完练习在回家。
+3、使用echo 命令将echo.txt文件中的内容改为。
+     先回家，在做练习
+4、使用echo命令在echo.txt文件中追加内容：
+    先写完作业，约饭，在回家。
+5、将今天的内容打包带走。
+6、分屏查看echo.txt文件内容。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

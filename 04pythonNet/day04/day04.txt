@@ -1,0 +1,259 @@
+day03回顾
+ IO 输入输出
+   目前学过的IO:
+      标准输入输入:
+        sys.stdin
+        sys.stdout
+        sys.stderr
+      文件流对象:
+        f = open('xxx.txt')  # open返回的对象
+      套按字对象
+        tcp_server = socket(AF_INET, SOCK_STREAM)
+        udp_server = socket(AF_INET, SOCK_DGRA)
+        user_socket = tcp_server.accept() 
+  IO的分类:
+    IO密集型程序
+    计算密集型程序
+
+IO的操作类型 
+  阻塞 IO
+    适合一个或少量的IO操作,这些IO需要协同工作
+    socket.settimeout(timeout)  设置最长阻塞时间
+  非阻塞IO
+    适合多个IO,每个IO做自己事情
+    非阻塞对CPU的使用效率低(CPU占有率高)
+    socket.setblocking(False)
+    socket.settimeout(0.0)
+  IO多路复用
+    select , poll, epoll
+    适合多个IO,每个IO做自己的事情
+    CPU占有率低,当没有IO有事件需要处理时,不占用CPU
+  
+select函数:
+  发生事件的读列表, 发生事件的写列表, 发生事情的异常列表= 
+     select(读列表,写列表,异常列表, 超时时间(秒))
+
+  rs, ws, xs = select([sys.stdin, tcp_server],[],[])
+
+位运算:
+  &  位与
+  |  位或
+  ^  位异或
+  << 左移
+  >> 右移
+  ~  取反
+
+复合赋值位运算符
+   &=  |= ^= <<= >>=
+
+day04笔记:
+文件描述符 file descriptor
+  1. 文件描述符是一个从0开始的整数
+  2. 文件描述符是操作系统内核识别IO的标志
+  3. IO对象可以通过fileno方法获取当前对象的文件描述符
+  4. 标准输入输出文件sys.stdin, sys.stdout, 
+     sys.stderr 的文件描述符固定为0, 1, 2
+
+poll 方法实现IO多路复用
+  注: windows poll IO多路复用
+  模块: select
+poll 相关的函数:
+  1. 创建 poll对象
+    函数:
+      select.poll()
+    作用:
+      创建poll 对象
+  2. 注册IO
+    方法名:
+      poll.register(fd[, eventmask])
+    作用:
+      注册一个文件描述符, 此文件描述符关联一个IO,让此
+      IO 作为poll 观注的对象
+
+    参数:
+      fd 文件描述符(整数或IO对象的fileno()  
+                 方法返回的整数)
+      eventmask 事件俺码
+         POLLIN  读IO事件
+         POLLOUT 写IO事件
+         POLLERR 出错IO事件
+         POLLHUP  连接断开事件或文件到达文件尾
+    如:
+      poll_object.register(sockfd, POLLIN | POLLHUP)
+
+  3. 取消注册 IO
+    方法:
+      poll.unregister(fd)
+    作用:
+      取消对IO的关注:
+    参数
+      fd 文件描述符(已关注过的)
+    返回值:
+      None
+
+  4. 监控IO对象
+    方法:
+      poll.poll([timeout])   # 相当于select 阻塞函数
+    作用:
+      等待监控的IO事件发生
+    参数:
+      timeout
+        最长的阻塞时间,毫秒为单位
+    返回值:
+      返回的数据都为两个元素组成的元组(fd, event)组成的列表,其中每个元组为一个就绪的IO事件
+        元组中有该IO的fd,和就绪事件的类型
+    如:
+      [(fd1, event1), (fd2, event2), ...]
+
+
+基于 poll 的 IO多路复用的TCP服务器实现步骤
+  1. 创建套接字
+  2. 将套接字设置为关注
+  3. 创建查找字典并维护字典
+     - 用于查找文件描述符与 IO之间的对应关系
+  4. 循环监控 IO 事件发生
+  5. 处理发生IO事件的IO
+
+实现TCP 服务器示例见:
+  tcp_server_poll.py
+
+poll 方式实现IO多路复用的优缺点:
+  优点:
+    连接数没有限制(也就是文件描述符)
+  缺点:
+    1. 大量的拷贝数据(效率低)
+    2. 当关注的IO没有被处理,会重复报告,很消耗CPU资源
+    3. 当连接数增多时,内核等待IO的时间消耗也会线性增大
+
+
+
+epoll 方法实现IO多路复用
+  使用方法写poll 方法相同
+  epoll 只能在Linux 操作系统上使用
+
+1. 创建 epoll 对象
+  函数:
+    select.epoll()
+2. 注册IO
+  方法名:
+    epoll.register(fd [,eventmask])
+  作用:
+    写poll.register方法作用相同
+  参数:
+    fd  需要关注的文件描述符
+    eventmask   选择要关注的IO事件的类型的位俺码
+        常用事件:
+        EPOLLIN  读IO事件
+        EPOLLOUT 写IO事件
+        EPOLLERR 出错IO事件
+        EPOLLHUP 连接断开事件或文件到达文件尾
+        EPOLLET  采用多次触发事件通知机制
+        EPOLLONESHOT 采用单次触发事件通知机制
+3. 取消注册IO
+  方法名:
+    epoll.unregister(fd)
+  作用:
+    同poll.unregister
+4. 监控IO对象
+  方法:
+    epoll.poll([timeout])
+  返回值同poll.poll 返回值完全相同
+
+
+epoll 操作步骤与 poll 操作步骤完全相同
+
+示例见:
+  tcp_server_epoll.py
+
+epoll特点:
+  1. 当存在大量的连接需要处理时epoll效率比poll效率高
+  2. 没有最大连接数限制
+  3. epoll的触发方式更多(多次触发和单次触发)
+
+
+
+
+本地套接字通信
+  作用:
+    本地两个程序之间发送数据消息
+  创建流程:
+    1. 创建本地套接字
+      sockfd = socket(AF_UNIX, SOCK_STREAM)
+    2. 绑定本地套接字文件
+    　　sockfd.bind('/home/tarena/mysock')
+    3. 监听
+      sockfd.listen()  # 设置为服务器端
+    4. 接受连接
+      user_fd = sockfd.accept()
+    5. 消息收到
+      sockfd.recv, sockfd.send
+    6. 关闭套按字
+
+
+本地套接字收接端示例见:
+    local_socket_recv.py
+
+本地套接字发送端示例见:
+    local_socket_send.py
+
+
+
+
+
+结构化数据包
+  struct 模块
+    作用:
+      将python的基础数据转换为bytes格式，并且可以将
+      bytes格式的数据转换回python格式
+
+打包为字节串函数
+  函数:
+    struct.pack(fmt, v1, v2, ...)
+  作用:
+    返回其中含有v1, v2, ... 打包后的字节串
+  参数:
+    fmt 格式化字符串
+　　　　v1, v2 为python可转化类型
+　　返回值
+　　　　符合格式的字节串
+
+解包字节串函数:
+  函数:
+    struct.unpack(fmt, buffer)
+  作用:
+    从buffer字节串中按fmt格式化字节串为python数据,
+    返回含有fmt中每一项数据的元组
+  参数:
+    fmt 格式化字符串
+    buffer 按fmt 格式的字节串
+
+常用格式化字符串
+  格式化字符串  python类型   字节数
+      c     一个字节的字符串 1bytes
+      b           int      1bytes
+      h           int      2bytes
+      i           int      4bytes
+      f           float    4bytes
+     ns           bytes    n个字节
+
+
+
+
+
+
+
+
+
+
+io 多路复用的缺点:
+  1.　当其中的一个IO的处理时间比较长时，其它的IO将可能
+  无法得到及时响应
+
+说明:
+  IO多路复用适合于IO密集型程序
+  计算密集型程序可以采用多进程或多线程方式解决
+
+
+　　
+
+

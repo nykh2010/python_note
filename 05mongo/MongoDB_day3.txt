@@ -1,0 +1,374 @@
+课程:MongoDB
+进度:day3
+
+上次内容回顾
+1. 文档的查找
+  - 格式: db.collectionName.find({条件})
+  - 示例:
+    db.acct.find({
+		acct_no:"622345000001",
+		acct_type:3
+	})
+2. 比较操作符:
+  - 等于/不等于: $eq, $ne
+	db.acct.find({
+		acct_no:{$eq:"622345000001"}
+	})
+  - 大于: $gt
+  - 小于: $lt
+  - 大/小于等于: $gte, $lte
+  - 包含/不包含: $in, $nin
+  
+3. 逻辑操作符
+  - 和: $and
+    db.acct.find({
+		$and:[
+			{acct_no:"622345000001"},
+			{acct_name:"Jerry"}
+		]
+	})
+  - 或: $or
+  - 非: $not
+  - 既不也不: $nor
+  
+4. 数组操作
+  - db.student.find({score:70})
+  - db.student.find({score:{$all:[70,80]}})
+
+5. 去重,显示前N笔,排序,统计
+  - 去重: distinct
+  - 显示前N笔: limit
+  - 排序: sort
+  - 统计笔数:count
+  
+6. 文档删除
+  - 示例:
+    db.acct.remove(
+	    {acct_name:"Jerry"}, 
+		true
+	)
+	
+7. 修改文档
+  - 语法: db.collectionName.update(
+	筛选条件,
+	修改内容,
+	是否执行插入(布尔值),
+	是否修改多笔(布尔类型)
+  )
+  
+  - $inc: 加法修改器
+    db.acct.update(
+		{acct_no:"622345000001"},
+		{$inc:{balance:1000}},
+		false,
+		false
+	)
+  - $mul: 乘法修改器
+  - $min: 取指定域/指定值中较小的
+  - $max: 取指定域/指定值中较大的
+  - $push/$pushAll: 向数组添加一项/多项
+  - $pull/$pullAll: 从数组删除一项/多项
+  
+作业: 见day2_作业.py
+
+今天的内容:
+1. 数组操作
+  1)将值插入数组某个指定的位置
+    需$push, $each配合使用
+	e.g. 将99,100两门成绩,插入Dekie学生的
+	     成绩的第一,第二个位置
+	db.student.update(
+		{name:"Dekie"},
+		{$push:{
+			score:{
+				$each:[100],
+				$position:0
+			}
+		}}
+	)
+	
+	db.student.update(
+		{name:"Dekie"},
+		{$push:{
+			score:{
+				$each:[33,44],
+				$position:1
+			}
+		}}
+	)
+  2)$pop: 弹出数组中的一项
+    1: 表示弹出最后一项
+	-1:表示弹出第一项
+    db.student.update(
+		{name:"Dekie"},
+		{$pop:
+			{score:-1}  
+		}
+	)
+  3)$addToSet: 向数组添加一项,并且去重
+    db.student.update(
+		{name:"Dekie"},
+		{$addToSet:
+			{score:55}
+		}
+	)
+  4)使用数组索引查找
+    e.g. 找student集合中,第一项成绩为33
+	     数据
+	db.student.find({"score.0":33})
+
+2. 日期类型
+  1)日期时间类型: 记录整数, 表示是自
+    1970-01-01 00:00:00到当前时间点的
+	毫秒数
+  2)取得日期时间
+    - Date(): 显示当前时间, 字符串
+	- new Date(): 生成当前时间,对象
+	- ISODate(): 生成当前时间,对象
+  3)将ISODate()转换为本地时间
+    - ISODate().toLocaleString()
+  4)用指定时间去创建对象
+    new Date("2018-01-01T18:02:54")
+	示例:
+	db.time_test.insert({
+	  date1:new Date("2018-01-01T18:02:54")
+	})
+3. Null类型:表示键/值/域不存在,未设置值
+  e.g. 查询某个域为空
+  db.acct.find({reg_date:null}) 
+  db.acct.find({reg_date:{$exists:true}})  
+
+4. 内嵌文档(重点)
+  1)文档中某个的值还是文档
+  e.g. 创建含有内嵌文档的集合
+    db.cust_info.insert({
+		cust_id:"0001",
+		cust_name:"Jerry",
+		contact: {
+			tel:"13811223344",
+			email:"aaa@qq.com",
+			addr:"Beijing"
+		}
+	})
+  e.g. 根据客户电话号码查询
+    db.cust_info.find({
+		"contact.tel":"13811223344"
+	})
+	* 域名称的引号不能省略
+  e.g. 修改C0001客户的电话为13811112222
+    db.cust_info.update(
+		{cust_id:"0001"},
+		{$set:{"contact.tel":"13811112222"}}
+	)
+	
+5. 索引
+  1)什么是索引: 指定键值及其文档所在位置
+    关系对照清单
+  2)用途:通过索引,快速定位文档的位置
+    通过避免全表扫描,提高检索效率
+  3)索引的开销
+    - 数据增删改时,需要调整索引结构
+	  对数据增删改效率有影响
+	- 会占据额外的存储空间
+  4)索引使用的注意事项
+    - 建立适合的索引
+	- 索引不宜太多
+	- 数据太少不适合创建索引
+  5)创建索引
+    - 语法: 
+	  db.集合名称.createIndex({域:类型})
+	  类型: 1 - 升序
+	        -1 - 降序
+	- 示例:在acct集合acct_name域创建索引
+	  db.acct.createIndex({acct_name:1})
+	  
+  6)查看索引: db.集合名称.getIndexes()
+      db.acct.getIndexes()
+  7)删除索引
+    - 删除指定索引
+	  db.集合名称.dropIndex(索引名称)
+	- 删除某个集合所有索引
+	  db.集合名称.dropIndex()
+	e.g. db.acct.dropIndex("acct_name_1")
+	
+  8)索引类型
+    - 复合索引:根据多个域创建的索引
+	  e.g. 在acct集合的acct_name创建升序
+	       reg_date域创建降序索引
+	  db.acct.createIndex({
+		acct_name:1,
+		reg_date:-1
+	  })
+	- 唯一索引: 域的值不能重复
+	  指定unique为true来创建唯一索引
+	  
+	  e.g. 在acct集合的acct_no域创建唯一索引
+	  db.acct.createIndex(
+		{acct_no:1},
+		{unique:true}
+	  )
+	  插入一笔存在的账户数据,验证:
+	  db.acct.insert({acct_no:"622345000003"})
+	  
+	- 稀疏索引(间隙索引): 如果域不存在,则不对
+	  该文档进行索引,从而提高索引的效率
+	  通过指定sparse为true,来创建稀疏索引
+	 
+	 e.g. 在cust_info集合fax域创建稀疏索引
+	  db.cust_info.createIndex(
+		{fax:1},
+		{sparse:true}
+	  )
+	  
+6. 聚合操作
+  1)聚合:对文档进行高级删选, 主要
+    用于统计,求平均,求和等等
+  2)聚合函数:db.集合名称.aggregate()
+	- 功能:完成聚合操作
+	- 参数:聚合条件,配合聚合操作符
+	- 返回:返回聚合的结果
+	
+  3)常用聚合
+    - 分组:$group(需要和统计操作配合)
+	  e.g. 根据acct_type统计各类账户数量
+	  db.acct.aggregate({
+		$group:{
+			'_id':'$acct_type',
+			num:{$sum:1}
+		}
+	  })
+	  类似于:
+	  select acct_type, count(*)
+	  from acct group by acct_type
+	  注意: 统计笔数时候,$sum后面只能是1
+	        分组域前面的$符号不能少
+	
+	- $sum: 对某个域求和
+	  e.g. 分组统计各类账户余额的总和
+	  db.acct.aggregate({
+		$group:{
+			'_id':'$acct_type',
+			total:{$sum:'$balance'}
+		}
+	  })
+	  
+	- $max: 求最大值
+	  e.g. 找出各类账户中余额最大的值
+	  db.acct.aggregate({
+		$group:{
+			'_id':'$acct_type',
+			max_value:{$max:'$balance'}
+		}
+	  })
+	- $min: 求最小值
+	- $avg: 求平均值
+	  db.acct.aggregate({
+		$group:{
+			'_id':'$acct_type',
+			avg_value:{$avg:'$balance'}
+		}
+	  })
+	  
+  4)$project: 从集合中查询指定的域
+    类似于SQL的投影运算
+	e.g. 从acct集合中,查询账户和户名
+	db.acct.aggregate({
+		$project:{
+			_id:0,
+			'账号':'$acct_no',
+			'户名':'$acct_name'
+		}
+	})
+	类似于: select acct_no as "账号",
+	               acct_name as "户名"
+			from acct
+	
+  5)$match: 对数据过滤
+    e.g. 查询账户余额小于5000的账户
+	db.acct.aggregate({
+		$match:{balance:{$lt:5000}}
+	})
+	
+  6)$sort: 排序
+    e.g. 查询所有账户,并根据balance倒序排列
+	db.acct.aggregate({
+		$sort:{balance:-1}
+	})
+	* -1表示降序,1表示升序
+  
+  7)管道聚合:上一个操作处理完成后,将结果作为
+    下一个操作的输入
+	e.g. 对acct集合根据acct_type筛选, 然后
+	     对筛选的结果按照账号进行降序排列
+	db.acct.aggregate(
+		{$match:{acct_type: 1}},
+		{$sort:{acct_no: -1}}
+	)
+	
+7. 固定集合(Capped Collections)
+  1)什么固定集合
+    - 有固定大小的集合(存储空间,笔数)
+	- 当数据大小/笔数超过上限后
+	  再插入新的数据会覆盖初始头部的数据
+	- 优点:
+	  插入速度快,顺序查找快
+	  能够淘汰早期数据
+	  控制集合大小
+	- 应用场景
+	  日志
+	  临时缓存
+	  
+  2)如何创建固定集合
+    - 语法: 
+	  db.createCollection(
+		集合名称,
+		{capped:true,size:10000,max:100}
+	  )
+	  capped: 设置为true表示创建固定集合
+	  size:集合的大小,单位bytes
+	  max:最多存放多少个文档
+	  
+	  e.g. 创建集合log, 限定最多存储3笔数据
+	  db.createCollection(
+		'log',
+		{capped:true,size:10000,max:3}
+	  )
+	  插入数据:
+	  db.log.insert({name:'Jerry',oper:'delete'})
+	  db.log.insert({name:'Tom',oper:'delete'})
+	  db.log.insert({name:'Dokas',oper:'delete'})
+	  db.log.insert({name:'Henrry',oper:'delete'})
+
+课堂练习
+在orders集合中,编写下列语句
+1)统计订单笔数
+2)查询所有订单,按照下单时间倒序显示
+3)修改某个订单状态
+4)为所有订单添加一个域: 支付状态
+  payment_status
+5)查询所有订单中,包含了编号为"P0001"
+  商品的订单
+6)在订单集合的订单编号(order_id)域
+  创建升序索引
+7)为某个订单添加备注信息(要求为字符串数组)
+8)删除一笔无效订单(根据状态删除,值自定)
+
+作业:
+1) 继续完成上述语句编写
+2) 复习TCP网络通信编程理论
+   Python中服务器和客户端代码的实现
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

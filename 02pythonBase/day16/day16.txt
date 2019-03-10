@@ -1,0 +1,275 @@
+day15回顾:
+  异常
+  　　发出异常语句:
+      raise 语句
+      assert 语句
+    接收异常通知语句:
+      try-except　语句
+
+　　    try-finally语句
+迭代器
+  访问可迭代对象
+
+生成器
+　　生成器函数
+     动态生成数据
+  生成器表达式
+     根据一个可迭代对象动态生成数据
+
+字节串和字节数组
+  bytes(不可变)   bytearray(可变的)
+
+序列五种:
+　　+ +=  *=
+  < <= ...
+  in / not in
+  索引切片
+
+文件操作:
+  操作步骤:
+    打开  ---> 读写  ---> 关闭
+  
+  open(文件路径名(字符串)，　打开模块(字符串))
+
+  打开模块:
+    't'  'b'
+    'w' 'r' 'a' 'x'  '+'
+
+  文本文件操作  't'
+    以字符串str为单位进行读写
+    '\n', '\r\n' , '\r'   --> '\r'
+
+  二进制文件操作 'b'
+    以字节串bytes为单位进行读写
+
+  F.close()
+  F.read([n个字节/n个字符])
+  F.readline()
+  F.readlines()
+  F.write([字节串/字符串])
+  F.writelines()
+  F.seek(相对位置, 偏移量)
+  F.tell()
+  F.flush()  清缓冲区
+
+day16 笔记
+  面向对象编程 Object-Oriented Programming
+
+1. 面向过程编程
+   最小单位:　函数
+
+2. 面向对象编程:
+   最小单位: 类
+
+
+什么是对象
+   对象是现实中的物体或实体
+
+什么是面向对象编程:
+   把一切看成对象(实例)  用各种对象之间的关系来描述事务
+
+
+对象有什么特征
+  属性(名词)
+     姓名, 性别, 年龄
+  行为(动作，动词) 
+    学习, 吃饭, 睡觉, 踢球, 工作
+
+
+什么是类
+  拥有相同属性和行为的对象分为一组，即为一个类
+  类是用来描述对象的工作，用类可以创建此类的对象(实例)
+
+示意
+   车(类) ----> BYD E6(京A.88888)  对象(实例)
+         \
+          \--> BMW X5(京B.00000)   对象(实例)
+   
+   狗(类)  --->哈士奇(户籍号00000001)  对象(实例)
+         \
+          \-->导盲犬(户籍号00000002)  对象(实例)
+
+   int(类)  ----> 100 (对象)
+           \
+            \---> 200 (对象)
+
+类的创建语句 class 语句
+  语法:
+    class 类名(继承列表):
+        '类文档字符串'
+        实例方法
+        类变量
+        类方法(@classmethod)
+        静态方法(@staticmethod)
+  作用:
+    创建一个类
+    用于描述对象的行为和属性
+    类用于创建此类的一个或多个对象(实例)
+
+  示例见:
+    class.py
+ 
+构造函数调用表达式
+  类名([创建传参列表])
+
+  作用:
+    创建并返回此类对象的引用
+  
+实例方法 method
+  语法:
+    class 类名(继承列表):
+        def 实例方法名(self, 形参1, 形参2, ...):
+            '方法的文档字符串'
+            语句块
+  作用:
+    用于描述一个对象的行为，让此类型的全部对象都拥有相同的行为
+  说明:
+    实例方法的实质是函数，是定义在类内的函数
+    实例方法至少有一个形参,第一个形参代表调用这个方法的实例，一般命名为:self
+
+  示例见:
+    instance_method.py
+
+
+
+实例属性 attribute(也叫实例变量)
+　　每个实例可以有自己的变量,称为实例变量
+
+  语法　：
+  　　实例.属性名
+  属性的赋值规则
+  　　首次为属性赋值则创建此属性
+  　　再次为属性赋值则改变原属性的绑定关系
+  作用:
+    记录每个对象自身的数据
+  attribute.py
+
+定义一个"人" Human 类
+   class Human:
+       def set_info(self, name, age, address='不详'):
+       　　　...此方法用来给人对象添加姓名,年龄，家庭住址属性
+
+       def show_info(self):
+           ... 此处显示此人的信息
+   如:
+     s1 = Human()
+     s1.set_info("小张", 20, '北京市朝阳区')
+     s2 = Human()
+     s2.set_info('小李', 18)
+     s1.show_info()  # 小张　今年　20　岁，　家庭住址:　北京市朝阳区　
+     s1.show_info()  # 小李 今年 18　岁，　家庭住址:　不详
+
+初始化方法:
+  作用:
+    对新创建的对象添加属性
+  格式:
+    class 类名(继承列表):
+        def __init__(self [, 形参列表]):
+            语句块
+    注:[]代表可省略
+  说明:
+    1. 初始化方法名必须为 __init__ 不可改变
+    2. 初始化方法会在构造函数创建实例后自动调用,且将实例自身的第一个参数self传入 __init__方法
+    3. 构造函数的实参将通过__init__方法的参数列表传入到__init__方法中
+    4. 初始化方法如果需要return语句返回,则只对返回None
+  示例见:
+    init_method.py
+
+
+练习:
+  写一个学生类Student,此类用于描述学生对象,
+     学生信息有:
+       姓名,年龄,成绩(默认为0)
+    1) 为该类添加初始化方法,实现在创建对象时自动设置: "姓名",'年龄', '成绩'属性
+    2) 添加set_score方法能为学生修改成绩信息
+    3) 添加show_info方法,打印学生对象的信息
+    如:
+      class Student:
+          def __init__(...):
+              ....
+          def set_score(self, score):
+              ...
+          def show_info(self):
+              ...
+      L = []
+      L.append(Student("小张", 20, 100))
+      L.append(Student("小李", 18, 95))
+      L.append(Student("小赵", 19))
+      for s in L:
+          s.show_info()
+
+析构方法:
+  def __del__(self):
+      ...
+  析构方法在对象被销毁之前被自动调用
+  python语言建议不要在对象销毁时做任何事情,因为销毁的时间难以确定
+
+  示例见:
+    del_method.py
+
+
+预值的实例属性
+  __dict__属性
+    __dict__属性绑定一个存储此实例自身变量的字典
+  示例:
+    class Dog:
+        pass
+    dog1 = Dog()
+    print(dog1.__dict__)  # {}
+    dog1.kinds = "京巴"
+    print(dog1.__dict__)  # {'kinds': '京巴'}
+
+  __class__ 属性
+    __class__属性绑定创建此实例的类
+    作用:
+      可以借助于此属性来访问创建此实例的类
+    示例:
+      class Dog:
+          pass
+      dog1 = Dog()
+      dog2 = Dog()
+      print(dog1.__class__)  # <class Dog>
+      dog3 = dog.__class__()  #创建dog1的同类对象
+
+用于实例的函数:
+  isinstance(obj, class_or_tuple) 返回这个对象obj是否是某个类的对象,或者某些类中的一个类的对象,如果是则返回True,否则返回False
+
+  type(obj)  返回对象的类
+
+  示例:
+    class Dog:
+        pass
+    dog1 = Dog()
+    isinstance(dog1, Dog)  # True
+    isinstance(100, Dog)  # False
+    isinstance(100, int)  # True
+    isinstance(3.14, (boo, int, float))  # True
+    type(100) is int  # True
+
+练习:
+  有两个人
+    1. 姓名: 张三  年龄:36
+    2. 姓名: 李四  年龄:15
+  行为:
+    1. 教别人学东西 teach
+    2. 赚钱 work
+    3. 错钱 borrow
+    4. 显示人的信息show_info
+
+  class Human:
+      ...
+  事情:
+    zhang3 = Human("张三", 35)
+    li4 = Human("李四", 15)
+    # 张三 教 李四 学 python
+    zhang3.teach(li4, "python")
+    # 李四 教 张三 学 跳皮筋
+    li4.teach(zhang3, "跳皮筋")
+    # 张三 上班赚了 1000 元钱
+    zhang3.work(1000)
+    # 李四 向 张三 借了 200 元钱
+    li.borrow(zhang3, 200)
+    # 35 岁的 张三 有钱 800 元,它学会的技能是: 跳皮筋
+    zhang3.show_info()
+    # 15 岁的 李四 有钱 200 元,它学会的技能是: python
+    li4.show_info()

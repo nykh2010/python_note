@@ -1,0 +1,326 @@
+day13回顾
+自定义模块
+  xxx.py
+
+导入语句:
+  import 
+  from import
+  from import *
+
+路径搜索顺序:
+　　1. 内建　
+  2.　当前
+  3. sys.path
+
+.pyc 
+
+
+预置属性:
+  __doc__ 属性
+  __file__ 属性
+  __name__ 属性
+    当为主模块是 '__main__'
+    其它　xxx模块名
+
+__all__ 列表
+  __all__ = ['name1', 'name2']
+  from import *
+
+隐藏属性
+  _xxxx 以下划线开头的全局变量名
+  from import * 不会被导入
+
+random
+
+包:
+  如何自定义包
+    mypack/
+        __init__.py
+        menu.py
+        xxxx.py
+
+  导入方式有两种:
+    绝对导入
+      import 包名.xxx.yyy
+      from 包名.xxxx.yyy import zzzz
+      from 包名.xxxx.yyy import *
+    相对导入
+      from ..xxxx.yyy import zzz
+      from .xxxx.yyy import *
+  __init__.py
+    __all__列表　
+      from import * 导入相应的属性
+
+异常
+　　两个流程，两种状态
+　　　　正常流程，正常状态
+　　　　异常流程，异常状态
+
+try语句
+  try-except 语句
+  try-finally语句
+
+try-except 
+  作用:
+    偿式捕获异常，并将程序由异常状态转为正常状态
+
+　　try:
+     fun()
+     fun2()
+  except ValueError:
+      错误处理
+  except ZeroDivisionError:
+      错误处理2
+  except (xxx,yyy,zzz):
+      pass
+  except:
+      pass
+  else:
+     ...
+  finally:
+      ...
+
+
+day14笔记:
+
+try-finally语句
+  语法:
+    try:
+        可以触发异常的语句
+    finally:
+         最终语句
+　　说明:
+    finally 子句不可省略
+    一定不存在except子句
+  作用:
+    通常用try-finally语句来做触发异常时必须要处理的事情，无论异常是否发生，finally子句都会被执行
+    try-finally语句不会改变程序的(正常／异常)状态
+
+  示例见:
+    try_finally.py
+
+raise 语句
+  作用:
+    触发一个错误，让程序进入异常状态，传递错误信息，把错误通知发送给调用者
+  语法:
+    raise 异常类型
+    或
+    raise 异常对象
+
+  示例见:
+    raise.py
+
+python3 全部的异常类型见文档:
+
+
+练习: 
+  写一个函数 get_age() 用来获取一个人的年龄信息
+    此函数规定用户只能输入1 ~ 140之间的数。如果用户输入其它 的数则直接触发ValueError类型的错误来通知调用来，由调用者来处理
+
+  def get_age():
+      ....
+
+  try:
+     age = get_age()
+     print('用户输入的年龄是:', age)
+  except ValueError as err:
+      print("用户输入的不是1~140之间的数")
+
+
+assert 语句 (断言语句)
+  语法:
+    assert 真值表达式, 错误信息(通常是字符串)
+
+  作用:
+    当真值表达式为False时，用错误数据创建一个AssertionError类型的错误，并抛出错误进入导常状态
+  等同于:
+    if 真值表达式 == False:
+        raise AssertionError(错误信息)
+  示例见:
+    assert.py
+
+
+异常小结:
+  语句（四条)
+    try-except
+       匹配错误，接收并处理异常通知
+    try-finally
+       执行必须要执行的语句
+    raise
+       触发异常通知，让程序进入异常状态
+    assert 语句
+       根据条件触发AssertionError类型的异常通知，并可能进入异常状态
+
+
+
+迭代器 Iterator
+
+什么是迭代器?
+  迭代器是访问可迭代对象的工具
+  迭代器是指用iter(obj) 函数返回的对象(实例)
+  迭代器可以用next(it) 函数获取可迭代对象的数据
+
+iter(可迭代对象)  从可迭代对象中返回一个迭代器，参数必须是一个能提供迭代器的可迭代对象
+next(迭代器)  从迭代器中获取下一个记录，如果无法获取一下条记录，则触发StopIteration异常
+
+说明:
+  迭代器只能往前取值，不能后退
+  用iter函数可以返回一个可迭代对象的迭代器
+
+示例:
+  L = [1, 3, 5, 7]
+  it = iter(L)  # 让L提供一个迭代器, it 绑定的是迭代器
+  print(next(it))  # 1 让迭代器获取数据
+  print(next(it))  # 3
+  print(next(it))  # 5
+  print(next(it))  # 7
+  print(next(it))  # StopIteration
+
+  # 用迭代器来获取range返回的对象的数据
+  it = iter(range(1, 10, 3))
+  next(it)  # 1
+  next(it)  # 4
+  next(it)  # 7
+  next(it)  # StopIteration 异常
+
+用while语句访问可迭代对象的示例见
+  iterator1.py
+
+练习:
+  有一个集合:
+    s = {'Tom', 'Jerry', 'Spike', 'Tyke'}
+    用for语句实现遍历如下:
+    for x in s:
+        print(x)
+    else:
+        print('遍历结束')
+    请将上面的for语句改写为while语句和迭代器实现
+
+生成器 Generator
+  生成器是能够动态提供数据的对象,生成器对象也是可迭代对象
+
+生成器有两种:
+  生成器函数
+  生成器表达式
+
+生成器函数是含有yield语句的函数，此函数调用将返回一个生成器对象
+
+yield语句
+  语法:
+    yield 表达式
+  作用:
+    yield 用来生成数据，此数据是返回给迭代器的next(it) 函数使用
+示例见:
+  myyield.py
+  myyield2.py
+  myyield3.py
+
+生成器函数说明:
+  1. 生成器函数调用将返回一个生成器对象，生成器对象是一个可迭代对象
+  2. 在生成器函数内调用return 会触发一个StopIteration异常
+
+生成器函数的应用示例见:
+  myinteger.py
+
+  
+
+练习:
+  写一个生成器函数 myodd(x) 来生成一系列奇数
+   如:
+    # myodd(10) 可以生成 1 3 5 7 9
+    def myodd(n):
+        ....  # <<< 此处自己实现
+    L = [ x for x in myodd(10)]  # L = [1, 3, 5, 7,9]
+    for x in myodd(6):
+        print(x)  # 打印 1, 3, 5
+
+
+生成器表达式
+  语法:
+    (表达式 for 变量 in 可迭代对象 [if 真值表达式])
+  说明:
+    if 子句可以省略
+  作用:
+    用推导式形式创建一个新的生成器
+  示例:
+    gen = (x ** 2 for x in range(1, 5))
+    it = iter(gen)
+    next(it)  # 1
+    next(it)  # 4
+    next(it)  # 9
+    next(it)  # 16
+    next(it)  # StopIteration
+
+
+
+看出以下两段程序的区别:
+  # 第一段程序 
+  L = [2, 3, 5, 7]
+  L2 = [x ** 2 for x in L]
+  it = iter(L2)
+  print(next(it))  # 4
+  L[1] = 30
+  print(next(it))   # 9
+
+  # 第二段程序
+  L = [2, 3, 5, 7]
+  G2 = (x ** 2 for x in L)
+  it = iter(G2)
+  print(next(it))  # 4
+  L[1] = 30
+  print(next(it))   # 900
+
+迭代工具函数:
+  zip(iter1 , iter2, iter3, ....)  返回一个zip对象，此对象用于生成元组，元组的数据分别来自iter1, iter2, iter2,直到最小的一个可迭代对象不再提供数据为止
+  
+  enumerate(iter, start=0)  生成带索引的枚举对象,返回迭代类型为索引-值对(index-value) 对默认索引从零开始
+
+zip示例:
+  numbers = [10086, 10000, 10010, 95588]
+  names = ['中国移动', '中国电信', '中国联通']
+  for t in zip(numbers, names):
+      print(t)
+
+enumerate 示例
+  names = ['中国移动', '中国电信', '中国联通']
+  for t in enumerate(names):
+      print(t)
+
+  for t in enumerate(names, 101):
+      print(t)
+
+enumerate实现方式示意:
+  见: myenum.py
+
+练习:
+  1. 写一个生成器函数myxrange([start,] stop[, stop]) 来生成一系列整数(功能等同于python2中的xrange或python3中的range)
+    (注:不允许调用range函数)
+
+  def myxrange(...):
+      ...
+
+  L = list(myxrange(10))
+    print(L)  # L = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9d]
+  for x in myxrange(1, 10, 3):
+      print(x)   # 打印 1 4 7
+  L2 = [x in x myxrange(5, 10)]
+  print(L2)  # [5, 6, 7, 8, 9]
+
+  2. 将学生信息管理程序拆分为模块
+    要求:
+      1. 主事件循环 (main函数)放在main.py
+      2. show_menu函数放在menu.py中
+      3. 与学生操作相关的函数放在student_info.py中
+    让程序依旧按原来的逻辑跑起来
+
+  3. 将上述学生信息管理程序加入异常处理语句，让用户输入任何数据都给出合适的响应而不会崩溃
+
+  思考:
+    如何将学生信息永久保存起来，让每次启动程序后可以加载以前的数据?  
+  预习:
+    文件操作
+    面向对象编程(类和对象)
+
+
+
+

@@ -1,0 +1,280 @@
+day07回顾
+  进程:
+    资源管理的单位,一个进程可以有多个线程，一个进程内管理
+    堆，栈，代码段，数据段，及打开的内核资源(如:打开的文件，
+    套接字等)
+
+  线程 Thread
+    线程是轻量级的进程,创建一个线程只需要在原有的进程中多增
+    加一个栈，多了一个执行流程
+    每个子线程并不分配堆，代码段，数据段等资源
+    所有的线程共有同一个进程的全部资源
+
+  多进程和多线程都可以同时利有CPU的多核资源
+
+线程的创建函数:
+  threading.Thread(target=None, name=None,
+       args=(), kwargs={})
+  创建线程对象，并返回 
+
+  t.start() 启动线程
+  t.join([timeout])  回收线程资源(栈)
+
+线程对象的属性:
+  t.name 线程的名字
+  t.setName(s)  修改名字
+  t.getName()   获取名字
+  t.is_alive() 获取线程的状态(常用)
+
+创建自己的线程类，
+  class MyThread(threading.Thread):
+      def __init__(self):
+          super().__init__()  # 初始化父类
+      def run(self):  # 覆盖父类的方法
+          '''实现子线程的任务'''
+          ...
+线程的互斥
+  对共享资源的访问需要互斥
+
+互斥的方式是对临界区加锁
+
+创建锁:
+  threading.Lock()
+上锁:
+  lock.acquire()  # 加锁，如果加锁失败则当前线程进入睡
+       眠状态，直至有其它线程解锁
+解锁:
+  lock.release()  解锁
+
+利用with语句上锁和解锁
+  with lock:
+      临界区访问共有资源的代码
+
+说明:
+  对临界区上锁的时间越短，则CPU利用率越高 (重要)
+
+
+
+线程的同步:
+  
+线程事件Event
+创建线程事件:
+   threading.Event()
+
+线程同步等待的方法:
+  eventn.wait([超时时间])
+
+将事件设置为True
+  event.set()  # 将事件设置为True,同时唤醒所有wait等待
+      的线程
+将事件设置为False
+  event.clear()  将事件设置为Flase,当有线程调用
+               event.wait()时将进入睡眠等待
+
+判断事件的值:
+  event.is_set()  返回当前事件的状态True/False
+
+GIL (Global Interpreter Lock)
+  CPython
+
+  
+协程 coroutine
+  协程又称微线程，纤程
+  协程是为非抢占式多任务产生子程序的计算机程序组件
+  协程允许不同入口点在不同位置暂停(pause)或者恢复（resume)，
+     简单来说，协程就是可以暂停执行并能恢复执行的函数任务
+  协程是合作式多任务的实现方式
+
+多任务示例见:
+  multi_task.py
+
+python的协程的实现原理:
+  python的协程是用生成器函数实现的
+
+含有yield语句的函数是生成器函数
+
+
+示例见:
+  coroutine_yield.py
+
+python协程的任务函数的特点:
+  1. 任务函数内可以用局部变量存放当前任务信息，在协程
+     函数退出前不会被释放
+  2. 协程函数不同于进程和线程，它不会因CPU调度而自动
+     切换，需要用某种机制手动切换
+  3. 协程函数调度切换时，将记录的上下文 保存起来，在切
+     换回来时进行调取，恢复原有的执行内容，因此可以从上
+     一次执行的位置继续执行
+
+协程的优缺点:
+  优点:
+    协程是一个单线程程序，占有计算机资源很少
+    协程间切换的开销少，执行效率高
+    协程无需同步互斥
+  缺点:
+    无法利用计算机多核资源
+    如果一个协程内出现死循环且没有让出协程的控制权，则其它
+    协程将无法得到执行
+  
+python协程的调度与通信
+  协程函数的传送数据方法:
+    co.send(value)
+  参数:
+    value 传参给生成器的yield表达式的值,第一次调用此
+    方法时参数必须是None
+  返回值:
+    生成器内下一次yield 表达式的值,当生成器函数调用结
+    束时会触发StopIteration异常
+  作用:
+    恢复执行生成器函数，value 参数将作为生成器函数yield
+    表达式的返回值,当此函数返回，说明生成器函数已经执行到
+    下一个yield表达式并挂起生成器函数的执行并返回
+
+yield 表达式:
+  语法:
+    r = yield [表达式]
+  说明:
+    当表达式省略时，等同于 yield None
+
+
+
+协程 之 greenlet
+  安装方法:
+    $ sudo pip3 install greenlet
+
+创建协程对象
+  函数:
+    greenlet.greenlet(task_fun)
+  参数:
+    task_fun 协程任务函数
+  返回值：
+    greenlet 对象
+
+切换协程任务
+  方法:
+    greenlet.switch()
+  功能:
+    选择要执行的协程事件
+  说明:
+    第一次调用时的传参是传给协程函数的形参，必须和协程函数
+    的调用一致
+  
+示例见:
+  coroutine_greenlet.py
+
+
+协程之 gevent
+  安装：
+    $ sudo pip3 install gevent
+
+创建协程任务:
+  函数：
+    gevent.spawn(function, *args, **kwargs)
+  参数:
+    function 协程任务函数
+    args    给协程函数位置传参
+    kwargs  给协程函数关键字传参 
+  返回值:
+    返回greenlet协程对象
+
+运行协程任务，协程资源回收
+  函数:
+    gevent.joinall(greenlet, timeout=None)
+  参数:
+    greenlet 要回收的协程列表
+    timeout 浮点数，超时时间(秒为单位)
+  返回值:
+    返回在超时之前已经运行完毕的greenlet协程对象组成的列表
+    此greenlet对象也可调用g.get() 方法获取协程的运行结果
+  功能:
+    运行协程任务，阻塞等待回收协程
+  
+gevent 创建创建协程的步骤：
+  1. 将协程事件封装为任务函数
+  2. 用gevent.spawn 生成协程对象(greenlet对象)
+  3. 用event.joinall 函数运行协程函数,执行协程任务
+
+用阻塞函数切换协程:
+  睡眠函数:
+    gevent.sleep(second=0)
+  参数:
+    阻塞时间（秒)
+  作用:
+    让gevent 当前协程阻塞，同时切换到其它协程
+
+
+
+修改 gevent 内的阻塞函数，让其能在阻塞之前主动让出协程
+  控制权
+  from gevent import monkey
+  monkey.patch_all()  # 为IO函数打补丁来让IO函数能够
+                      主动让出协程控制权
+
+
+
+
+
+HTTP协议的WEB应用
+ HTTP 超文本传输协议
+   应用层协议，默认端口号是: 80 端口
+
+  作用:
+    网页数据的获取和传输
+  特点:
+    1. 应用层协议，传输层选择TCP传输
+    2. 简单，灵法，很多语言都有HTTP专有接口
+    3. 无状态协议，协议体身不要求记录传输的数据
+    4. http1.1 支持持久连接
+  请求过程
+    1. 客户端发出请求给服务器
+    2. 服务器返回响应给客户端
+
+
+http请求request 格式:
+  1. 请求头
+     1) 请求行:
+        {方法} SP {URL} HTTP/1.x  CRLF
+        如:  GET /index.html HTTP/1.1
+     2)  实体头
+        {类型名}: SP {值}  CRLF
+        如:
+          Host: localhost: 8080
+          Connection: keep-alive
+      3) 头部结束标志:
+         CRLF    即b'\r\n'
+  2. 请求体(HTTP数据)
+
+http响应 response 格式
+  1. 响应头
+     1) 响应行
+        HTTP/1.x SP {状态码} SP {描述} CRLF
+        如:
+          HTTP/1.1 200 OK
+          HTTP/1.1 404 Not Found
+     2) 实体头:
+       {类型名}: SP {值}  CRLF
+     3) 头部结束标志:
+        CRLF
+  2. 响应体
+    http响应数据
+响应头的状态码:
+  状态码:
+   值:
+     1xx 提示信息，表求请求被接收
+     2xx 响应成功
+     3xx 响应需进一步操作，重定向
+     4xx 客户端错误
+     5xx 服务器端错误
+   常用:
+      200 成功
+      404 访问内容不存在
+      401 没有访问权限
+
+示例见:
+  http_server_select.py
+
+
+
+
+
+

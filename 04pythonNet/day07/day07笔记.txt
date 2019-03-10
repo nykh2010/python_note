@@ -1,0 +1,287 @@
+day06回顾
+
+进程间通信:
+  包:
+    multiprocessing
+  管道 Pipe
+    conn1, conn2 = Pipe(True/False)
+    参数为:True
+        conn1.send(obj)  -----> conn2.recv()
+        conn1.recv()     <----- conn2.send(obj)
+    参数为:False
+        conn1.recv()     <----- conn2.send(obj)
+
+  消息队列 Message Queue
+    创建:
+     queue = multiprocessing.Queue(最大长度=0)
+    存放数据
+      queue.put(data, block=True, timeout=None)
+    获取数据
+      queue.get(block=True, timeout=None)
+    关闭消息队列:
+      queue.close()
+  共享内存:
+    共享值 Value
+         单个数据
+      创建
+        value_obj = Value(类型码, 初始值)
+                         'i'  int(2,4,8字节)
+                         'c'  int(1字节)
+                         'f'  float(4字节)
+      使用:
+        value_obj.value 属性来获取或改变共享值
+     共享数组 Array
+       创建:
+         array = Array(类型码, 整数或可迭代对象)
+       使用:
+         array.raw
+         array.value
+         array[索引或切片]
+
+       函数:len(x)        
+多进程锁:
+  创建锁:
+     lock = multiprocess.Lock()
+  使用:
+    with lock:
+        操作共享资源的代码...
+    # 当离开with语句时,自动解决
+  作用:
+    实现互斥    
+
+
+day07笔记:
+进程间通信的对比:
+            管道       消息列表     共享内存
+读写方式   两端读写      先进先出     覆盖内存
+ 效率        一般        一般         高效
+ 特点     多用于父子进程  可以1对多  需要自己控制同步操作
+
+
+
+信号量(也叫信号灯)  Semaphore
+  作用:
+    让多个进程协同工作
+  原理:
+    给定一个变量,多个进程同时可见,多个进程可以通过方法
+    操作数量,达到协同工作的目的
+  类:
+    multiprocessing.Semaphore
+   
+创建信号量:
+  构造函数:
+    multiprocessding.Semaphore([value])
+  作用:
+    创建信号量对象
+  参数:
+    value 
+       信号量的初始值(默认为1)
+  返回值:
+    信号量对象
+
+申请获取信号量:
+  方法:
+    sem.acquire()
+  说明:
+    将信号量减1,当信号量减后结果为负数时,该方法阻塞
+释放信号量:
+  方法:
+    sem.release()
+  作用:
+    将信号量加1(同时可能唤醒等待此信号量的进程)
+
+得到信号值的方法
+  方法:
+    sem.get_value()
+  作用:
+    获取信号量的数量
+  说明:
+    在Mac OS X上没有此方法(Windows下未测试)
+
+信号量说明:
+  可以用with 语句获取信号里,离开with语句时,信号里会
+  会自动释放
+  当初始信号量值为1时,用with语句能够实现多进程锁
+
+
+示例见:
+  shm_value_semaphore.py  # 用信号里实现互斥
+  semaphore.py
+
+多任务编程之 线程 Thread
+
+什么是线程
+  1. 线程是多任务的编程方法
+  2. 线程被称为是轻量级的进程
+  3. 线程是系统分配CPU资源的最小工作单位
+
+线程的特点 :
+  1. 一个进程可以包含多个线程
+  2. 多个线程的执行顺序互不影响
+  3. 线程的创建和销毁消耗占用的资源, 远远低于进程
+  4. 线程共享进程中的内存资源
+
+说明:
+  一台计算机可以有多个进程,一个进程可以有多个线程
+
+创建线程:
+  模块:
+    theading
+
+创建函数:
+  函数:
+    threading.Thread(target=None, name=None,
+           args=(), kwargs={})
+  作用:
+    创建线程对象
+  参数:
+    target   绑定线程处理函数
+    name   线程名称,默认为Thread-1
+    args   元组,给target线程函数按位置传参
+    kwargs 字典,给target线程函数按关键字传参
+  返回值:
+    线程对象
+  
+启动线程的方法:
+  方法名:
+     t.start()
+  作用:
+    启动线程,运行线程函数
+
+回收子线程资源:
+  方法名:
+     t.join([timeout])
+  作用:
+    阻塞等待回收线程资源
+  参数:
+    timeout 超时时间(可选)
+说明:
+  线程处理函数结束,则线程自动结束
+  默认主线程退出,所有子线程自动终止
+
+示例见:
+  thread_demo1.py
+
+线程对象的属性：
+  t.name  线程的名字
+线程的方法:
+   t.setName(s) 设置线程名称
+   t.getName()  得到线程名称
+   t.is_alive() 获取线程的状态，如果已经结束则返回False
+                否则返回True
+
+
+创建自己的线程类 的步骤：
+  1. 继承自threading.Thread类
+  2. 添加自己的初始化方法,用super调用父类的__init__方法
+  3. 覆盖run方法
+  4. 使用自己的类来创建线程对象，调用start启动线程来运
+     行线程:
+  示例见:
+    mythread.py
+
+
+线程间通信:
+  通信方法:
+    使用线程空间的全局变量或可变对象进行通信
+
+示例见:
+  thread_communication.py
+
+线程的互斥
+  多线程编程时注意事项:
+    共享资源的争夺，需要使用互斥机制
+  共享资源(临界资源):
+    多个线程都可以操作的资源称为共享资源
+  临界区:
+    指多个线程可能同时操作同一共享资源的代码
+
+互斥:
+  互斥是一种制约关系，当一个进程或线程使用临界资源时都按规则拿到锁后再对临界资源进行操作，操作完毕后立即释放锁的原则,可以避免的共有资源的访问冲突
+  
+示例见:
+  thread_no_lock.py
+
+线程锁 threading.Lock
+  创建线程锁:
+    threading.Lock()
+  上锁:
+    lock.acquire()
+    说明: 如果已经上销，则再次上锁用此函数会阻塞，直到此
+         锁被其它线程解锁
+  解锁:
+    lock.release()
+
+  利有with语句上锁和解锁
+    with lock:
+       .... 临界区代码块
+  示例见:
+    thread_lock.py
+
+死锁:
+  多个线程同时在等待一个不能可释放的锁的现象叫死锁
+
+
+
+线程的同步:
+  同步就是协同步调,按预定的先后次序执行
+
+线程事件 Event
+  Event 内置了一个标志,初始值为False,当此标志为False时
+  线程用e.wait() 方法进入阻塞等待，当有其它线程设置为
+  True时，等待的线程才能继承执行
+
+创建线程事件对象:
+  函数:
+    threading.Event()
+  返回: 线程事件对象
+
+线程同步等待方法:
+  方法名:
+    e.wait([timeout])
+  功能:
+    阻塞函数,如果事件为False时等待,事件被设置为True则不进行等待
+  参数:
+    timeout 超时时间(默认无限等待)
+线程事件的其它方法:
+  e.set()  将线程事件设置为True状态
+  e.clear()  将线程事件设置为False状态
+  e.is_set()  判断当前事件状态是True还是False
+
+python 线程GIL问题:
+  全局解释器锁 GIL (Global Interpreter Lock)
+  由于python解释器设置中加入了全局解释器锁，导致python
+   解释器在同一时刻只能解释一个线程，所以大大降低了 python的执行效率
+
+  说明:
+    python线程一般用在存在大量阻塞IO的程序或者延迟IO程序中(如网络消息发送),因为python线程在遇到阻塞时主动,让出GIL
+
+  GIL 建议:
+    尽量使用进程完全并发或并行
+    不使用CPython作为解释执行器，改用Jython或IronPython
+    可以使用多种组合解决并发问题
+
+示例见:
+  thread_GIL.py
+
+
+
+
+
+实现自动对话机器人服务器
+  发送:xxxxx
+  返回: ====xxxxx====
+
+  服务器端能够统计用户在线人数
+
+1. 用IO多路复用 select实现(单进程，单线程)
+2. 改为多进程实现
+3. 改为多线程实现
+
+练习:
+  1. 将robot_server_process.py，用进程间通信，实现
+  主进程知道在线的人数，并显示在线人数:
+  2. 实现子进程资源回收 is_alive()
+
+
+

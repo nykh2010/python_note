@@ -1,0 +1,180 @@
+GIT
+
+1. 什么是git:是一个开源的代码版本管理工具
+
+2. 代码版本管理工具
+
+   * 代码备份
+	 * 代码版本控制
+	 * 在多人开发时进行分支管理,方便代码合并
+
+3. git的特点
+   
+	 1. 开源的
+	 2. 分布式
+	 3. 多用在*nix操作系统,可以管理各种文件
+	 4. 更好的支持分支,方便多人协同
+	 5. 更好的代码安全性
+
+4. 安装 : sudo  apt-get install git
+
+5. 基础配置 : git  config
+
+   配置用户: git config --global user.name Tedu
+	 配置邮箱: 
+	   git config --global user.email lvze@tedu.cn
+
+6. 基本概念
+
+  工作区: 用于代码文件的操作
+	暂存区: 用于将工作区修改内容进行记录保存
+	本地仓库: 根据暂存区记录同步工作区内容,做工作区						备份
+	远程仓库:远程主机上的git仓库
+
+7. git基础命令
+  
+	初始化仓库: 	git init 
+	
+	* 在某个目录中初始化仓库,则该目录即变为git管理项目目录,目录中所有文件都可以使用git命令管理
+
+	查看工作分支状态: git  status
+
+	* 创建仓库时默认工作于master分支
+
+	文件提交:  git  add  [file]
+
+	取消提交记录:  git rm --cached [file] 
+
+  向仓库同步内容: git commit -m 'some message'
+
+	查看commit日志: git log
+
+	查看工作区文件和仓库文件差异:git diff [file]
+  
+	将文件恢复到上次保存内容: git checkout [file]
+
+  移动/删除文件 :  git mv  /  git rm
+	  
+		* 参数用法同mv / rm命令,操作后直接提交到暂存区,再进行commit即可
+
+  取消移动/删除的暂存行为:git reset HEAD [file]
+
+
+8. git的版本控制
+
+  退回到之前的commit版本状态:git reset --hard HEAD^
+  
+	  * 工作区和仓库均回到之前的commit状态
+
+  退回到某个commit_id处:
+				git reset --hard [commit_id]
+	
+	查看所有操作记录: git  reflog
+
+
+	查看标签:  git  tag
+
+	创建标签: git tag [tag_name] [commit_id] -m 'msg'
+
+  查看标签信息: git  show  [tag]
+
+	跳转到某个标签: git reset --hard [tag]'
+
+	删除标签:  git tag -d [tag]
+
+
+9.分支管理
+
+  什么是分支: 分支即每个人获取原有分支代码,建立新的工作环境,单独开发不影响其他分支操作.这个新的环境即新分支
+
+  分支好处: 安全,不影响其他分支行为,独立控制进度
+
+  查看分支: git branch 
+  
+	  * 前面有 * 号的分支表示当前正在工作的分支
+	
+	创建新的分支: git branch [branch_name]
+
+  创建并切换分支: git checkout -b [branch_name]
+  
+  合并分支 : git merge [branch]
+
+    * 冲突 : 当合并分支时,发现现有分支与原来拷贝是出现了变化,此时就会产生冲突.特别是对同一个文件修改产生的冲突需要手动处理.
+
+		* 为避免冲突,最好创建分支时保证原分支是干净的,同时尽量不要修改原有内容
+  
+	删除分支: git  branch  -d  [brnach]
+
+	  * 如果删除没有被合并的分支要用-D
+
+10. 远程仓库
+  
+	定义: 别人主机上的git仓库.实际上git是分布式的,每一台主机上git仓库的结构都相似.
+
+  创建共享仓库
+
+    [1] 创建共享仓库目录并设置属主
+		  
+			 mkdir gitrepo
+			 chown tarena:tarena gitrepo
+		
+		[2] 将仓库目录使用git初始化为共享仓库
+			 
+			 git init --bare tedu.git
+    
+		[3] 将git项目配置目录设置为和项目目录相同的属主
+	     
+			 chown -R tarena:tarena tedu.git
+
+
+  添加远程主机:
+		git remote add origin tarena@127.0.0.1:/home/tarena/gitrepo/tedu.git
+
+  查看远程主机: git  remote
+	删除远程主机: git  remote rm  [origin]
+
+  向远程主机推送内容:git push -u origin  master
+
+	  * 第一次向远程仓库推送分支使用-u建立分支关联
+
+  向远程推送标签:git push  origin v1.0
+	  * 推送所有标签:  git push  origin  --tags
+
+  删除远程分支
+				git push origin --delete Tom_dev
+
+	删除远程标签
+				git push origin --delete  tag  [tag_name]
+ 
+  从远程仓库获取git仓库
+				git clone tarena@127.0.0.1:/home/tarena/gitrepo/tedu.git
+
+	从远程分支拉取代码合并到当前分支
+	     git  pull 
+	
+	从远程分支拉取代码不合并
+			 git  fetch
+
+	将远程分支拉取到本地新建分支中:
+			git fetch origin Tom_dev:tmp
+	
+	强制同步本地版本操作到远程
+	     git push --force origin
+
+11. github
+
+   简介 : 开源社区网站,提供给用户管理git项目.也可以下载开源项目代码.git是唯一指定的代码管理工具
+
+  建立ssh信任
+
+	  在github账号 settings --> SSH and GPG Keys -->new ssh key 填写你主机的公钥内容,选择添加
+		此时使用该主机上传内容就不需要密码
+
+		* 在linux下通过 ssh-keygen 建立秘钥
+
+
+
+
+
+
+

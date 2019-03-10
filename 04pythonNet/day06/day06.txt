@@ -1,0 +1,314 @@
+day05回顾
+  IO多路复用
+    单任务编程:缺点，如果有一个IO对象发生阻塞，其它的IO对象
+        无法得到响应
+  多任务编程
+    同时处理多个任务。提高程序的运行效率，缩短IO的排队等待
+    时间
+  实现方法:
+    多进程
+    多线程
+
+   并发 (同一CPU轮时间片)
+   并行(多个CPU同时执行多个程序)
+
+   进程: 正在执行程序
+      进程占用资源（CPU/内存/其它)
+      进程是资源分配和调度的最小单位
+
+   父进程
+      子进程
+      pstree
+   进程的状态：
+      R 运行
+      S 睡眠
+      Z 僵尸
+      S 停止 (ctrl+z)  ($ fg)
+   创建进程:
+     os.fork()  创建进程
+     成功: 两次返回
+          主进程: 返回子进程的ID
+          子进程: 返回0
+     失败: 返回-1
+
+  得到pid : os.getpid()
+  得到ppid: os.getppid()
+  退出进程: 
+        os._exit()
+        sys.exit()
+  回收僵尸进程: os.wait()
+
+
+使用 multiprocessing.Process 创建进程
+   multpiprocessing.Process(target=进程处理函数
+     , name='名字字符串', args=(), kwargs={})
+
+  启动进程:
+     p.start()  # 调用 fork开启新进程
+  回收僵尸子进程:
+     p.join()  # 调用os.wait() 释放进程资源
+  进程对象的属性
+     p.name 进程的名称
+     p.pid 进程 的 PID
+  p.is_alive()  查看进行是否活着,僵尸进程将返回False
+
+进程池
+  创建进程池:
+     multiprocessing.Pool()  返回进程池对象
+  向进程池内添加异步任务
+     pool.apply_async(函数, args=(), kwds={}, callback=None)
+    返回值是事件对象。可以用obj.get() 方法得到结果
+  
+  向进程池内添加同步任务
+     pool.apply(函数, args=(), kwds={})
+     返回值是进程函数执行的结果(不需要用obj.get方法)
+  关闭进程池
+    pool.apply()
+  回收子进程:
+    pool.join()
+
+  进程池map方法
+     实现异步多任务的map操作
+     pool.map(func, 可迭代对象)
+
+
+
+
+day06笔记:
+进程间通信 IPC(Inter-Process Communication)
+什么是时程间通信
+  进程空间相对独立，资源无法相互获取，此时不同时程间
+  传递信息需要进程间通信
+
+进程间无法通信的示例见:
+  no_ipc.py
+
+进程间通信的机制
+  管道
+  消息队列
+  共享内存
+  信号量
+  套接字(本地套接字／网络套接字)
+  ...
+
+管道　Pipe
+  原理: 在内核中开辟内存管道空间，生成管道对象，多个
+      进程(通常只是两个进程)进行读写，来实现通信
+  创建管道
+    函数:
+      multiprocessing.Pipe(duplex=True)
+    作用:
+      创建管道，用于两个进程间通信
+    参数:
+      duplex:
+         True 建立双向管道（默认)
+         False 建立单向管道
+    返回值:
+       (conn1, conn2) 一对连接管道两端的IO对象,如果是双向
+       管道，两端都可以读写，如果是单向管道，conn1只用来
+       接收数据,conn2用来发送数据
+
+  管道两端的收发数据方法:
+    接收方法:
+      conn.recv()
+    　　返回值: 读取的内容(可以写入Python内建的数据类型)
+　　　　发送方法:
+      conn.send(obj)
+      作用: 向管道写入内容
+
+   管道的关闭方法:
+     方法名:
+        conn.close()
+      作用:
+        关闭连接的IO对象，释放管道资源
+
+  管道的示例见:
+     pipe.py
+
+　　说明:
+     管道一但进行进程分裂，则父进程的两个IO对象conn1,conn2
+     也同时会复制在子进程中,此管道的内核中的引用计数会增加，
+     此时需要父进程和子进程都关闭两个IO对象(即关闭四次)
+  
+
+
+消息队列  Message Queue
+队列的概念:
+  先进先出　（FIFO, first in first out)
+
+  原理: 
+    在内核内建队列，一个进程向里存入，另一个进程按先后
+  　　顺序可以依次取出(类似于UDP传输)
+  类:
+    multiprocessing.Queue
+
+创建消息队列的构造函数:
+  函数:
+    multiprocessing.Queue(maxsize=0)
+  作用:
+    创建消息队列对象
+  参数:
+    maxsize 表示队列中最多存放多少个消息(默认不受限制)
+  返回值:
+    消息队列对象
+
+向消息队列存入消息数据
+  方法:
+    queue.put(data, block=True, timeout=None)
+  参数:
+    data 存储入的内容(python数据类型)
+    block 默认队列满时会阻塞，设置为False则为非阻塞
+    timeout 超时检测时间
+  说明:
+    当非阻塞put失败，或阻塞时timout为正数且超时，则会
+      触发queue.Full类型的错误
+ 
+从消息队列中提取消息数据
+  方法:
+    queue.get(block=True, timeout=None)
+  参数
+    同queue.put 中的参数规则相同
+  说明:
+    当非阻塞get失败或阻塞超时会触发queue.Empty错误
+
+其它方法:
+  queue.full() 判断队列是否为满
+  queue.empty() 判断队列是否为空
+  queue.qsize()    返回队列中的消息个数
+  queue.close()    关闭消息队列
+
+示例见:
+  queue.py
+
+
+共享内存 shared memory
+  一段内存两个或两个以上的进程同时可见
+
+  原理:
+    在操作系统内存中开辟一段以字节为单位的内存空间，这段
+    内存的地址会分别映射到不同的进程空间中,此段内存对多个进
+    时同时可见
+  优点:
+    速度快
+  缺点:
+    多个进程可同时操作这段内存，每写入的内容会覆盖之前的内容
+    通常需要用互斥机制来解决冲突问题
+
+python中两种共享内存的方式:
+   共享值
+   共享数组
+
+共享值
+  创建一个数据共享对象，来共享整数或浮点数
+  
+创建共享值对象
+  函数:
+    multiprocessing.Value(typecode_or_type, value)
+  作用:
+    开辟共享内存空间，用来存单个数字
+  参数:
+    typecode_or_type:
+      ctype类型或对应的字符串，表示共享内存中要存储的数据
+      类型
+      类型码 'i' --> ctype.c_int(最小2个字节) -->int
+      类型码 'f' --> ctype.c_float(4个字节)  -->float
+      类型码 'c' --> ctype.c_char(1个字节)   -->int
+    value 
+      初始值,整数或浮点数(受限)
+  返回值:
+    共享内存对象
+
+值对的属性
+  obj.value
+    对该属性的修改和使用即对共享内存的数据进行修改和访问
+
+示例见
+  shm_value.py  
+
+互斥
+  互斥是解决共享冲突的方式
+
+同步:
+  两个或两个以上的进程或线程，协调工作
+
+多进程锁 multiprocessing.Lock
+  对多个进程中共享资源进行互斥操作
+
+创建多进程锁
+  函数:
+    multiprocessing.Lock()
+  作用:
+    对共享资源进行互斥操作
+  返回值
+    多进程锁对象
+  说明:
+     需要用with语句进行加锁和解锁操作
+
+  示例见:
+    shm_value3.py
+
+共享数组
+  创建多个数据共享对象来共享多个同样的整数或浮点数
+
+创建共享数组对象
+  函数：
+    multiprocessing.Array(typecode_or_type,
+            size_or_initializer)
+  作用:
+    开辟一段连续的共享内存空间来存放数据
+  参数:
+    typecode_or_type  同 Value共享值对象
+    size_or_initializer
+       整数 代表数字的个数(默认值是0或0.0)
+       可迭代对象  提供多个数来初始化共享数组
+  返回值:
+    共享数组对象
+  说明:
+    共享数组自带进程锁，可以用with语句进行同步和互斥
+
+共享数组对象的属性
+  obj.value
+     数组对应的字节串(或列表)
+  raw
+     数组对应的原始数字的字节串(或列表)
+  索引或切片的取值和赋值
+
+  len(obj)  得到共享数组的长度
+  共享数组是可迭代对象
+
+示例见:
+   shm_array.py
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

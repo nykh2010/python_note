@@ -1,0 +1,208 @@
+day16回顾:
+
+面向对象
+     对象(实例)          类
+   object(instance)   class
+
+特征:
+  行为
+  属性
+
+class 语句
+  class 类名(继承列表):
+    实例方法(用来描述一个对象的行为)
+    def __init__(self, ......):
+        "初始化方法"
+    def __del__(self):
+        "析构方法"
+
+
+构造函数
+   类名(实参)
+
+
+实例属性(实例变量) attribute
+   
+预置的实例属性
+   __dict__ 属性
+   __class__ 属性
+
+isinstance(obj,  类或元组)
+type(obj)  # obj.__class__
+
+
+
+
+day17 笔记
+del 语句:
+　　作用:
+    1. 删除变量             del L
+    2. 删除列表的索引和切片   del L[10], L[::2]
+    3. 删除字典的键          del d['name']
+    4. 删除对象的属性        del dog1.color
+
+  语法:
+     del 对象.属性
+
+  示例：
+    class Dog:
+        pass
+    dog1 = Dog()
+    dog1.color = '白色'
+    del dog1.color
+    print(dog1.__dict__)  # {}  空字典
+
+
+类变量
+  类变量的类的属性，此属性属于类，不属于此类的实例
+
+  作用:
+    通常用来存储该类创建的对象的共有属性
+  说明:
+    类变量,可以通过该类直接访问
+    类变量，可以通过类的实列直接访问(获取数据)
+    类变量可以通过此类的对象的'__class__'属性间接访问
+  示例见:
+    class_variable.py
+
+类的文档字符串:
+  类内第一个没有赋值给任何变量的字符串为文档字符串
+  类的文档字符串由类的__doc__属性绑定
+
+  示例:
+    class Dog:
+        '''这是一个小动物类的定义
+
+        这种小动物是人类的伙伴
+        '''
+        def eat(self, food):
+            '这是吃的方法'
+
+
+类内的__slots__列表
+  作用:
+    限定一个类创建的实例只能有固定的属性(实例变量)
+    不允许对象添加列表以外的实例属性
+    访止用户因错写属性的名称而发生程序错误
+
+ 说明:
+   含有__slots__列表的类所创建的实例对象没有__dict__属性,即此实例不用字典来存储对象的实例属性
+  示例见:
+    class_slots.py
+
+类方法@classmethod
+  类方法是用于描述类的行为的方法，类方法属于类，不属于该类创建的对象
+
+  说明:
+    类方法需要使用@classmethod装饰器定义
+    类方法至少有一个形参，第一个形参用于绑定类，约定写为: "cls"
+  示例见:
+    class_method.py
+
+
+
+静态方法 @staticmethod
+  静态方法是定义在类内的函数,此函数的作用域是类的内部
+
+  说明:
+    静态方法需要使用staticmethod装饰器定义
+    静态方法与普通函数定义相同，不需要传入cls和 self参数
+    静态方法只能凭借该类或该类的实例来调用
+
+  示例见:
+    static_method.py
+   
+
+
+继承(inheritance) 和 派生(derived)
+什么是继承的派生
+  1. 继承是从已有的类中派生出新类，新类具有原类的数据和行为,并能扩展新的行为
+  2. 派生类就是从一个已有类中衍生出新类，在新的类上可以添加新的属性和行为
+
+  作用:
+    用继承派生机制，可以将一些共有功能加在基类中，实现代码共享
+    在不改变基类的代码的基础上改变原有的功能
+  名词:
+    基类(base class)/超类(super class) /父类(father class)
+    派生类(derived class) / 子类(child class)
+  
+单继承
+  语法:
+    class 类名(基类名):
+        语句块
+  说明:
+    单继承是指派生类由一个基类衍生出来的
+  示例:
+    inherit.py
+
+继承说明:
+   Python3任何类都直接或间接的继承自object类
+   object类是一切类的超类
+
+  类的 __base__ 属性
+    __base__属性用来记录此类的基类
+  
+python3类图详见:
+   >>> help(__builtins__)
+
+
+覆盖 override
+  覆盖是指在有继承关系的类中，子类中实现了与基类同名的方法，在子类的实例调用调用该方法时，实际调用的是子类的覆盖版本,这种现象叫覆盖
+  
+  示例见:
+    override.py
+
+
+super 函数:
+  super(cls, obj)  返回绑定超类的实例(要求:obj必须是cls类的实例或cls子类的实例)
+  
+  super()  返回绑定超类的实例,等同于: super(__class__, 实例方法的第一个参数),必须在方法内调用
+
+  作用:
+    借助super() 返回的实例间接调用其父类的覆盖方法
+
+  示例见:
+    super.py
+
+显式调用基类的初始化方法:
+  当子类中实现了__init__方法，基类的构造方法并不会被调用，此时需要用super() 函数显式调用基类的构造方法
+
+  示例见:
+    super_init.py
+
+用于类的函数:
+  issubclass(cls, class_or_tuple) 判断一个类是否继承自其它的类，如果此类cls是class或tuple中的一个派生子类，则返回True,否则返回False
+
+  示例:
+    class A:
+        pass
+    class B(A):
+        pass
+    class C(B):
+        pass
+    issubclass(C, B)  # True
+    issubclass(B, C)  # False
+    issubclass(C, A)  # True
+    issubclass(C, (int, str, list)) #False
+
+
+
+练习:
+改写之前的学生信息管理系统
+  将原列表中用字典保存的学生信息换为用学生(Student)对象来保存学生的信息
+
+    # student.py
+    class Student:
+        def __init__(self, n, a, s):
+            ....
+
+    # student_info.py
+    from student import Student
+    L = []
+    L.append(Student("小张", 20, 100))
+    L.append(Student("小张", 20, 100))
+
+
+
+
+
