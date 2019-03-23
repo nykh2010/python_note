@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <div id="container">
+		<p id="p1">
+			这是container中id为p1的元素
+		</p>	
+	</div>
+	<button onclick="removeP1()">删除p1</button>
+	<script src="common.js"></script>
+	<script>
+		function removeP1(){
+			var container = $("container");
+			var p1 = $("p1");
+			container.removeChild(p1);
+		}
+	</script>
+ </body>
+</html>

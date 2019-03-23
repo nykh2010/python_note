@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+	<script src="common.js"></script>
+	<script>
+		/*function btnAdd(){
+			//1、获取 id为num的文本框
+			var num = $("num");
+			//2、获取 id为num的文本框的值
+			var value = num.value;
+			//3、将值+1之后再赋值给文本框
+			num.value = ++value;
+		}
+
+		function btnReduce(){
+			//1、获取 id为num 的文本框
+			var num = $("num");
+			//2、获取 id为num 的文本框的值
+			var value = num.value;
+			//3、如果文本框的值大于1的话，则继续执行减1操作
+			if(value > 1){
+				num.value = --value;
+			}else{
+				num.value = 1;
+			}
+		}*/
+
+		function btnOper(o){
+			var num = $("num");
+			var value = num.value;
+
+			//判断是加法操作还是减法操作
+			if(o == '+'){
+				//执行加法
+				//num.value = ++value;
+				value++;
+			}else{
+				//执行减法
+				if(value > 1){
+					//num.value = --value;
+					value--;
+				}
+			}
+			num.value = value;
+		}
+	</script>
+ </head>
+ <body>
+  <p>
+		<button onclick="btnOper('-')">-</button>
+		<input type="text" id="num" value="1">
+		<button onclick="btnOper('+')">+</button>
+	</p>
+ </body>
+</html>

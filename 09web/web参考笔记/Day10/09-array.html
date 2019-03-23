@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+	<script>
+		function createArray(){
+			//1、使用 [] 创建空数组
+			var arr1 = [];
+			//2、使用 [] 创建数组并初始化元素
+			var arr2 = ['张无忌','张翠山','张三丰'];
+			//3、使用 new 创建空数组
+			var arr3 = new Array();
+			//4、使用 new 创建数组并初始化元素
+			var arr4 = new Array('赵敏','殷素素','金花婆婆');
+
+			console.log("arr2:"+arr2);//默认将arr2数组转换为字符串，拼接到"arr2"字符串的后面
+			console.log("arr4:"+arr4);//同上
+
+			//打印 arr2 数组中的第个各元素
+			console.log("第五各元素为："+arr2[4]);
+			//为 arr2 数组中的第8个元素赋值为 "小昭"
+			arr2[7] = "小昭";
+			console.log(arr2);
+		}
+	</script>  
+	<button onclick="createArray()">创建数组</button>
+ </body>
+</html>

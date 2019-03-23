@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <script>
+		function appendStr(){
+			var arr = [];
+			/*while(true){
+				var input = prompt("请输入数据：");
+				if(input == "exit"){
+					break;
+				}
+				arr[arr.length] = input;
+			}*/
+			do{
+				var input = prompt("请输入数据:");
+				if(input != "exit"){
+					arr[arr.length] = input;
+				}
+			}while(input != "exit");
+
+			console.log("数组元素:"+arr);
+		}
+
+		function findIndex(){
+			//1、声明一个数组，初始化若干整数
+			var nums = [78,129,65,3,122,987,-123,58];
+			console.log("数组的元素为:"+nums);
+			//2、从弹框中录入一个数字
+			var input = prompt("请输入一个数字:");
+			//用于记录找到的元素的下标
+			var index = -1; // 如果查找重复元素，此处变为数组
+			//3、循环遍历 nums 中的每个元素，依次与input进行比较，如果找出相等的，则记录下标，否则给出提示
+			for(var i=0;i<nums.length;i++){
+				if(input == nums[i]){
+					index = i;//如果查找重复元素，此处将i的值保存进数组
+					break;//如果查找重复元素，此处不加break
+				}
+			}
+
+			//根据 index 的值 给出提示
+			if(index == -1){
+				console.log("您查找的数据不存在！");
+			}else{
+				console.log(input+"的下标为:"+index);
+			}
+		}
+	</script>
+	<button onclick="appendStr()">追加新元素</button>
+	<button onclick="findIndex()">查找元素</button>
+ </body>
+</html>

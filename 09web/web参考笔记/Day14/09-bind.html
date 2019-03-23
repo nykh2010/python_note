@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+	<script src="jquery-1.11.3.js"></script>
+	<script>
+		$(function(){
+			//为 #btn1 绑定 click 事件
+			$("#btn1").bind("click",function(){
+				alert("在初始化的时候，为#btn1绑定的事件");
+				//this 依然可以表示激发当前事件的元素(DOM对象)
+				//console.log(this.innerHTML);//调用DOM对象的innerHTML属性
+
+				//将this转换成jQuery对象，再调用html()函数
+				console.log($(this).html());
+			});
+
+
+			//为#btn2绑定click事件
+			$("#btn2").click(function(){
+				alert("这是btn2的单击事件");
+				console.log(this);
+			});
+		});
+	</script>
+ </head>
+ <body>
+  <button id="btn1">绑定事件1</button>
+	<button id="btn2">绑定事件2</button>
+ </body>
+</html>

@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <button id="btn1">ID为btn1的BUTTON</button>
+	<script src="common.js"></script>
+	<script>
+		window.onload = function(){
+			$("btn1").onclick = function(event){
+				console.log(event.offsetX + ":" + event.offsetY);
+			}
+		}
+	</script>
+ </body>
+</html>

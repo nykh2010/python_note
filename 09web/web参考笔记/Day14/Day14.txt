@@ -1,0 +1,232 @@
+﻿1、JSON对象
+	1、什么是JSON
+		JSON：JavaScript Object Notation,JS对象表现形式
+		JSON通常会作为轻量级的数据交换格式
+		JSON一般也可以表示只有属性没有方法的对象
+	2、声明JSON对象
+		1、JSON对象必须使用{}来表示
+		2、使用键值对的方式来声明数据(表示属性和值)
+		3、所有的属性，必须使用""括起来，值如果是字符串的话，也必须使用""括起来
+		4、属性和值之间使用 : 隔开
+		5、多对属性和值之间使用 , 隔开
+2、jQuery选择器
+	1、作用
+		获取页面上的元素们，返回值都是由jQuery对象组成的数组
+		语法：$("选择器")
+
+		1、基本选择器
+			1、ID选择器
+				$("#id")
+				返回：页面中指定ID值的元素
+			2、类选择器
+				$(".className")
+				返回：页面中指定className的所有元素
+			3、元素选择器
+				$("element")
+				返回：页面中指定标记的所有元素
+			4、群组选择器 / 复合选择器
+				$("selector1,selector2,...")
+				返回：满足函数内所有选择器的元素
+		2、层级选择器
+			1、$("selector1 selector2")
+				后代选择器
+			2、$("selector1>selector2")
+				子代选择器
+			3、$("selector1+selector2")
+				名称：相邻兄弟选择器
+				作用：匹配紧紧跟在selector1后面且满足selector2选择器的元素
+			4、$("selector1~selector2")
+				名称：通用兄弟选择器
+				作用：匹配selector1后面所有满足selector2的元素
+		3、基本过滤选择器
+			过滤选择器通常都会配合着其他的选择器一起使用
+			1、:first
+				只匹配到第一个元素
+			2、:last
+				只匹配到最后一个元素
+			3、:not(selector)
+				将满足selector选择器的元素排除在外
+			4、:odd
+				匹配 偶数行 元素 (奇数下标)
+			5、:even
+				匹配 奇数行 元素 (偶数下标)
+			6、:eq(index)
+				匹配下标等于index的元素
+			7、:gt(index)
+				匹配下标大于index的元素
+			8、:lt(index)
+				匹配下标小于index的元素
+		4、属性过滤选择器
+			1、[attribute]
+				作用：匹配包含指定属性的元素
+			2、[attribute=value]
+				作用：匹配attribute属性值为value的所有元素
+			3、[attribute!=value]
+				作用：匹配attribute属性值不是value的所有元素
+			4、[attribute^=value]
+				作用：匹配attribute属性值是以value字符作为开始的元素
+			5、[attribute$=value]
+				作用：匹配attribute属性值是以value字符作为结束的元素
+			6、[attribute*=value]
+				作用：匹配attribute属性值中包含value字符的所有元素
+			
+			ex:
+				1、匹配页面中所有的文本框
+					$("input[type='text']")
+		5、子元素过滤选择器
+			1、:first-child
+				匹配属于其父元素中的首个子元素
+			2、:last-child
+				匹配属于其父元素中的最后一个子元素
+			3、:nth-child(n)
+				匹配属于其父元素中的第n个子元素
+3、jQuery操作DOM
+	1、基本操作
+		1、html()
+			作用：获取 或 设置 jQuery对象中的HTML内容
+		2、text()
+			作用：获取 或 设置 jQuery对象中的text内容
+		3、val()
+			作用：读取 或 设置 jQuery对象中的value值(表单控件)
+
+			ex:
+				<input type="text" id="uname">
+				console.log($("#uname").val());
+				$("#uname").val("mary");
+			练习：
+				1、创建一个 文本框，定义id
+				2、创建一个按钮 ，内容为 显示
+				3、创建一个div，定义id
+				4、点击按钮的时候，将文本框的内容获取出来，构建成一级标题的样式显示在div中
+		4、属性操作
+			1、attr()
+				作用：读取或设置jQuery对象的属性值
+				ex:
+					1、$obj.attr("id");
+						获取 $obj 对象的 id 属性值
+					2、$obj.attr("id","container");
+						设置 $obj 对象的 id 属性值为 container
+			2、removeAttr("attrName")
+				作用：删除jQuery对象的attrName属性
+				ex:
+					$obj.removeAttr("class");
+					从 $obj 对象中将 class 属性移除出去
+	2、样式操作
+		1、attr("class","className")
+			使用 attr() 动态绑定 class 属性值
+			ex:
+				$obj.attr("class","container");
+		2、addClass("className")
+			作用：将className 添加到元素的 class值之后
+			ex:
+				$obj = $obj.addClass("c1");
+				$obj = $obj.addClass("c2");
+
+				$obj.addClass("c1").addClass("c2").html();
+		3、removeClass("className")
+			删除指定的类选择器
+		4、removeClass()
+			删除所有类选择器
+		5、toggleClass("className")
+			切换样式：
+				元素如果具备className选择器，则删除
+				元素如果没有className选择器，则添加
+		6、css("属性","值")
+			为元素设置某css属性极其值
+		7、css(JSON对象)
+			$("#title").css({
+				"color":"red",
+				"font-size":"12px"
+			});
+	3、遍历节点
+		1、children() / children(selector)
+			ex: $obj.children()
+				获取jQuery对象中的所有子元素 或 带有指定选择器的子元素
+			注意：只考虑直接子元素，不考虑后代元素
+		2、next() / next(selector)
+			获取jQuery对象的下一个兄弟元素 / 满足selector的下一个兄弟元素
+		3、prev() / prev(selector)
+			获取jQuery对象的上一个兄弟元素 / 满足selector的上一个兄弟元素
+		4、siblings() / siblings(selector)
+			获取jQuery对象的所有兄弟元素 / 满足selector的兄弟元素
+		5、find(selector)
+			查找满足selector选择器的所有后代元素
+		6、parent()
+			查找jquery对象的父元素
+	4、创建对象
+		语法：$("创建的内容")
+		ex:
+			1、创建一对div元素   
+				var $div = $("<div id='d1'>测试的div</div>");
+			2、创建一对button
+				var $btn = $("<button></button>");
+				$btn.html("点我试试!");
+	5、插入元素
+		作用：将创建好的元素插入到网页中
+		1、内部插入
+			作为子元素插入到页面中
+			1、$obj.append($new)
+				将$new元素插入到$obj中最后一个子元素位置处
+			2、$obj.prepend($new)
+				将$new元素插入到$obj中的第一个子元素位置处
+		2、外部插入
+			作为兄弟元素插入到页面中
+			1、$obj.after($new)
+				将$new作为$obj的下一个兄弟元素插入进来
+			2、$obj.before($new)
+				将$new作为$obj的上一个兄弟元素插入进来
+4、jQuery中的事件处理
+	1、页面加载后的执行
+		1、
+			$(document).ready(function(){
+				//页面初始化的操作
+				//DOM树加载完成后就开始运行
+			});
+		2、
+			$().ready(function(){
+				//页面初始化的操作
+				//DOM树加载完成后就开始运行
+			});
+
+		3、
+			$(function(){
+				//页面初始化的操作
+				//DOM树加载完成后就开始运行
+			});
+	2、jQuery的事件绑定
+		1、方式1
+			$obj.bind("事件名称",事件处理函数);
+
+			ex:
+				$obj.bind("click",function(){
+					console.log("单击事件");
+				});
+		2、方式2
+			$obj.事件名称(事件处理函数);
+
+			ex:
+				$obj.click(function(){
+					//允许使用this表示触发该事件的DOM对象
+				});
+	3、事件对象 - event
+		在绑定事件的时候，允许传递 event 参数来表示事件对象
+
+		1、
+			$obj.bind("click",function(event){
+				//event 表示事件对象
+			})
+		2、
+			$obj.click(function(event){
+				//event 表示事件对象
+			});
+
+		event 的使用方式与 原生JS事件中的事件对象一致
+			event.stopPropagation() : 阻止事件冒泡
+			event.offsetX:鼠标事件中鼠标在元素上的横坐标
+			event.offsetY:鼠标事件中鼠标在元素上的纵坐标
+			event.which:键盘事件中表示字符的ASCII码或键位码
+			event.target:任何事件中都表示事件源
+
+
+
+

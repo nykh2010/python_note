@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+	<script>
+		/*声明变量：全局变量*/
+		var uname = "张三丰";
+
+		function print1(){
+			/*局部变量：只在print11()中有效*/
+			var msg = "这是print1中的变量";
+			/*全局变量：js的任何位置处都能用，不能使用var来声明*/
+			g_msg = "这是在print1中声明的全局变量";
+			console.log(msg);
+			/*打印 uname 变量(全局)*/
+			console.log(uname);
+			/*打印 g_msg 全局变量*/
+			console.log(g_msg);
+		}
+
+		function print2(){
+			/*msg是print1中的局部变量*/
+			//console.log(msg);
+
+			/*打印 uname 变量(全局)*/
+			console.log(uname);
+			/*打印 g_msg 全局变量*/
+			console.log(g_msg);
+		}
+	</script>
+	<button onclick="print1()">调用print1()</button>
+	<button onclick="print2()">调用print2()</button>
+ </body>
+</html>

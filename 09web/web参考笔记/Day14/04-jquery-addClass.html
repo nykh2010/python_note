@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+	<style>
+		.c1{color:Red;}
+		.c2{font-size:24px;}
+		.c3{display:none;}
+	</style>
+	<script src="jquery-1.11.3.js"></script>
+	<script>
+		function testClass(){
+			/*var $p1 = $("#p1").addClass("c1");
+			$p1 = $p1.addClass("c2");
+			$p1 = $p1.addClass("c3");
+			console.log($p1.html());*/
+
+			console.log($("#p1").addClass("c1").addClass("c2").addClass("c3").html());
+		}
+
+		function testToggle(){
+			$("#p1").toggleClass("c3");
+		}
+	</script>
+ </head>
+ <body>
+  <p id="p1">这是一段测试的文本</p>
+	<button onclick="testClass()">连缀调用(addClass)</button>
+	<button onclick="testToggle()">切换样式</button>
+ </body>
+</html>

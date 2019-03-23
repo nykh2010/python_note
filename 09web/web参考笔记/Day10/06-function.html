@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <script>
+		/*1、声明一个函数，功能：向控制台打印输出Hello World */
+		function print(){
+			console.log("Hello World");
+		}
+
+		/*2、声明一个函数，功能：接收两个数字作为参数，在函数体内，将两个数字进行相加并打印输出*/
+		function add(n1,n2){
+			var sum = n1 + n2;
+			console.log(n1+"+"+n2+"="+sum);
+		}
+
+		/*3、声明一个函数，功能：接收一个数字作为参数，返回该数字是否为素数的结果(true或false)*/
+		function isSu(num){
+			var su = true;
+			for(var i=2;i<=num/2;i++){
+				if(num % i == 0){
+					su = false;
+				}
+			}
+			return su;
+		}
+
+		/*调用函数 print()*/
+		//print();
+
+		/*声明函数，功能：调用add()函数，以及isSu()函数*/
+		function run(){
+			/*1、调用add函数并传参*/
+			add(15,18);
+			/*2、调用isSu函数，传参并接收返回值*/
+			//var ret = isSu(33);
+			if(isSu(17)){
+				console.log("是素数");
+			}else{
+				console.log("不是素数");
+			}
+		}
+	</script>
+	<!-- 通过元素事件调用函数 -->
+	<button onclick="print()">调用print()函数</button>
+
+	<button onclick="run()">调用run()函数</button>
+
+ </body>
+</html>

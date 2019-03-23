@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+	<script src="jquery-1.11.3.js"></script>
+	<script>
+		function testSelector(){
+			/*#container中所有的文本变为红色*/
+			//$("#container").css("color","red");
+
+			/*#container中文本为红色，背景为黄色*/
+			/*var opts = {
+				"color":"red",
+				"background-color":"yellow"
+			};*/
+
+			/*$("#container").css({
+				"color":"red",
+				"background-color":"yellow"
+			});*/
+
+			/*相邻兄弟选择器*/
+			//$("#container h3+.author").css("color","red");
+
+			/*通用兄弟选择器*/
+			//$("#container h3~.ct").css("color","green");
+
+			/*基本过滤选择器*/
+			//$("#container p:last").css("color","pink");
+			//$("#container p:not(:first)").css("color","blue");
+			/*$("#container p.ct:odd").css("background","red");
+			$("#container p.ct:even").css("background","yellow");*/
+
+			/*基本过滤选择器*/
+			//$("div h3:first").css("color","red");
+			/*子元素过滤选择器*/
+			$("div h3:first-child").css("color","red");
+		}
+	</script>
+ </head>
+ <body>
+  <div id="container">
+		<h3>静夜思</h3>
+		<p class="author">李白</p>
+		<p class="ct">床前明月光</p>
+		<p class="ct">疑是地上霜</p>
+		<p class="ct">举头望明月</p>
+		<p class="ct">低头思故乡</p>
+	</div>
+
+	<div id="container1">
+		<h3>静夜思</h3>
+		<p class="author">李白</p>
+		<p class="ct">床前明月光</p>
+		<p class="ct">疑是地上霜</p>
+		<p class="ct">举头望明月</p>
+		<p class="ct">低头思故乡</p>
+	</div>
+	<button onclick="testSelector()">测试选择器</button>
+
+ </body>
+</html>

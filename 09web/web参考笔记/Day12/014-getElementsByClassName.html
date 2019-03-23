@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <div id="poem1">
+		<p class="title">登鹳雀楼</p>
+		<p>白日依山尽</p>
+		<p>黄河入海流</p>
+		<p>欲穷千里目</p>
+		<p>更上一层楼</p>
+	</div>
+
+	<div id="poem2">
+		<p class="title">春晓</p>
+		<p>春眠不觉晓</p>
+		<p>处处闻啼鸟</p>
+		<p>夜来风雨声</p>
+		<p>花落知多少</p>
+	</div>
+
+	<button onclick="getTitle()">获取 class 为 title 的元素</button>
+
+	<script>
+		function getTitle(){
+			var tList = document.getElementsByClassName("title");
+			for(var i=0;i<tList.length;i++){
+				console.log(tList[i].innerHTML);
+			}
+		}
+	</script>
+ </body>
+</html>

@@ -1,3 +1,10 @@
 * shortcut icon尺寸16x16、32x16，使用.ico矢量图，缩放尺寸不会改变。
 * 默认字体大小em是16px，h1默认32px，h4为默认大小16px，h6是相对尺寸0.67em<12px，小于12px的元素按12px显示。
 * p标签默认大小16px
+* cellspacing 表格中边框与边框之间的距离， cellpadding 表格中内容区域与边框的距离
+* 跨列合并， 属性 colspan, 取无单位的数值，表示包含自身在内包含几个单元格
+* th自带文本加粗和居中效果， 常用作于表头单元格
+* form中如果有二进制数据，method='post', enctype='multipart/form-data'设置数据编码类型，默认对应get方法，将数据转换字符串拼接在url后携带传输。
+* radio 一组按钮的控件name必须保持一致，value必需写
+* label for id用来实现文本与控件的绑定，点文本与点控件达到一样的效果。
+* <button>与<input type="button">的区别：form内的<button>相当于submit，form外的<button>相当于普通button

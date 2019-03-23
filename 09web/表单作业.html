@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<form action="/login">
+	<table>
+		<thead>
+			<th colspan="3">用户表单</th>
+		</thead>
+		<tbody>
+			<tr>
+				<td>姓名：</td>
+				<td><input type="text" name="unmae" maxlength="10"></td>
+				<td>10个字符以内</td>
+			</tr>
+			<tr>
+				<td>密码：</td>
+				<td><input type="password" name="upasswd" maxlength="10"></td>
+				<td>10个字符以内</td>
+			</tr>
+			<tr>
+				<td>性别：</td>
+				<td>
+					<label for="male">男士</label><input type="radio" id="male" name="gender" value="male" checked>
+					<label for="female">女士</label><input type="radio" id="female" name="gender" value="female">
+				</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>角色</td>
+				<td>
+					<input type="checkbox" id="bill" name="role"><label for="bill">帐单管理员</label><br>
+					<input type="checkbox" id="super" name="role"><label for="super">超级管理员</label>
+				</td>
+				<td>至少选择一个角色</td>
+			</tr>
+			<tr>
+				<td>头像</td>
+				<td><input type="file" name="uimage"></td>
+				<td></td>
+			</tr>
+			<tr></tr>
+		</tbody>
+		<tfoot>
+			<td></td>
+			<td>
+				<input type="submit" value="保存">
+				<input type="reset" value="重填">
+			</td>
+			<td></td>
+		</tfoot>
+	</table>
+	</form>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>类选择器</title>
+	<!-- 声明内部样式表 -->
+	<style>
+		/*声明类选择器：.redColor ，效果为：红色文字，黄色的背景*/
+		.r
+		
+		zcxedColor{
+			color:red;
+			background-color:yellow;
+		}
+
+		/*声明分类选择器，匹配页面中所有 class为redColor的div元素，并设置其文本都有一根删除线 text-decoration:line-through; */
+		div.redColor{
+			text-decoration:underline;/*下划线*/
+		}
+	</style>
+ </head>
+ <body>
+  <div class="redColor">锄禾日当午</div>
+	<p class="redColor">汗滴禾下土</p>
+	<div>谁知盘中餐</div>
+	<p>粒粒皆辛苦</p>
+ </body>
+</html>

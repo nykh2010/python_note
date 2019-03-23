@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <script>
+		function validateCode(){
+			//1、创建数组
+			var code = ['A','B','C','D','E','a','b','c','d','e',0,1,2,3,4,5,6,7,8,9];
+			var vCode = "";
+			//2、生成四位随机验证码
+			for(var i=0;i<4;i++){
+				//index 表示0-code.length之间的随机数
+				var index = parseInt(Math.random()*code.length);
+				vCode += code[index];
+			}
+			var input = prompt("请输入验证码:"+vCode);
+			if(input.toUpperCase() == vCode.toUpperCase()){
+				alert("正确!");
+			}else{
+				alert("验证码输入不正确，请重新输入!");
+			}
+		}
+
+		function validateEmail(){
+			var email = prompt("请输入一个邮箱：");
+			//获取 @ 符号 出现的位置
+			var atIndex = email.indexOf("@");
+			//获取最后一个 . 出现的位置
+			var dotIndex = email.lastIndexOf(".");
+			//atIndex不能是-1，并且dotIndex也不能是-1，并且 dotIndex 必须大于 atIndex
+			if(atIndex != -1 && dotIndex != -1 && dotIndex > atIndex){
+				alert("邮箱格式正确!");
+			}else{
+				alert("邮箱格式错误请重新输入");
+			}
+		}
+
+		function getNameByEmail(){
+			var email = prompt("Email:");
+			var uname = email.substring(0,email.indexOf("@"));
+			var server = email.substring(email.indexOf("@")+1,email.lastIndexOf("."));
+			console.log(uname);
+			console.log(server);
+		}
+
+		function getBirthByIDCard(){
+			var card = "220102199901023316";
+			var year = card.substring(6,10);
+			var month = card.substring(10,12);
+			var day = card.substring(12,14);
+			console.log("生日："+year+"年"+month+"月"+day+"日");
+		}
+
+		function testSplit(){
+			/*str 模拟购物车信息 ：商品ID_购买数量&商品ID_购买数量*/
+			var str = "1001_5&1002_4&1003_1";
+			/*一级拆分：按 & 拆分*/
+			var goods = str.split("&");
+			//console.log(goods);
+			/*二级拆分：遍历goods中的每个元素，按 _ 拆分*/
+			for(var i=0;i<goods.length;i++){
+				var arr = goods[i].split("_");
+				console.log("商品ID:"+arr[0]+",购买数量:"+arr[1]);
+			}
+		}
+
+		function testReplace(){
+			var msg = "你大爷的，你打的什么玩意，垃圾一个，你大爷!";
+			/*将所有的你大爷都替换成 ** */
+			//1、使用子字符串
+			/*var newMsg = msg.replace("你大爷","**");
+			console.log(newMsg);*/
+
+			/*2、使用正则表达式*/
+			var reg = /你大爷|垃圾/g
+			var newMsg = msg.replace(reg,"**");
+			console.log(newMsg);
+		}
+
+		function testMatch(){
+			var msg = "你大爷的，你打的什么玩意，垃圾一个，你大爷!";
+			var reg = /你大爷|垃圾/g;
+			var arr = msg.match(reg);
+			console.log("您共说了"+arr.length+"个违规单词");
+		}
+
+		function testReg(){
+			var msg = "Microsoft is a big company,microsoft's color is red and has MICROSOFT logo like microsoft";
+
+			var reg = /microsoft/gi;
+			/*1、查找共有多少各microsoft*/
+			var arr = msg.match(reg);
+			console.log("共要替换:"+arr.length+"个microsoft");
+			/*2、替换所有的 符合 reg 模式的子字符串*/
+			msg = msg.replace(reg,'微软');
+			console.log("替换后的字符串为:");
+			console.log(msg);
+		}
+	</script>
+	<button onclick="testReg()">测试模式匹配练习</button>
+	<button onclick="testMatch()">测试模式匹配-match</button>
+	<button onclick="testReplace()">测试模式匹配-replace</button>
+	<button onclick="validateCode()">验证码</button>
+	<button onclick="validateEmail()">验证邮箱</button>
+	<button onclick="getNameByEmail()">获取用户名</button>
+	<button onclick="getBirthByIDCard()">获取生日</button>
+	<button onclick="testSplit()">测试split</button>
+ </body>
+</html>

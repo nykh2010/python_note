@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <form action="/login/" id="loginForm">
+		<p>
+			用户名：<input type="text">
+		</p>
+		<p>
+			<input type="submit" value="提交">
+		</p>
+	</form>
+	<script>
+		var form=document.getElementById("loginForm");
+		form.onsubmit = function(){
+			return false;
+		}
+	</script>
+ </body>
+</html>

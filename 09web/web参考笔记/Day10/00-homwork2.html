@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <script>
+		var year = Number(prompt("Year:"));
+		var month = Number(prompt("Month:"));
+		var day = Number(prompt("Day:"));
+		var totalDays = 0;
+		//从1月开始，循环到month-1月结束
+		var i = 1;
+		while(i < month){
+			switch(i){
+				case 1:
+				case 3:
+				case 5:
+				case 7:
+				case 8:
+				case 10:
+					totalDays += 31;
+					break;
+				case 4:
+				case 6:
+				case 9:
+				case 11:
+					totalDays += 30;
+					break;
+				case 2:
+					totalDays += 28;
+					if(year%4==0&&year%100!=0||year%400==0){
+						totalDays += 1;
+					}
+
+			}
+			i++;
+		}
+		totalDays += day;
+		console.log("第"+totalDays+"天");
+	</script>
+ </body>
+</html>

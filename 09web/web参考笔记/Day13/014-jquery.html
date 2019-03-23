@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+	<script src="jquery-1.11.3.js"></script>
+	<script>
+		window.onload = function(){
+			var btn = document.getElementById("btn");
+			btn.onclick = function(){
+				//更改 #d1 中的 html 文本
+				//$("#d1").html("动态改变的文字!");
+				//获取 #d1 中的 html 文本
+				console.log($("#d1").html());
+			}
+		}
+	</script>
+ </head>
+ <body>
+  <div id="d1">这是一个测试的div</div>
+	<button id="btn">变</button>
+ </body>
+</html>

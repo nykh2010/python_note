@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+	<script src="jquery-1.11.3.js"></script>
+	<script>
+		function btnTest(){
+			/*通过#container找到所有的直接子元素*/
+			//var children = $("#container").children();
+
+			/*通过 .author 找到上一个兄弟元素*/
+			/*$(".author").prev().css("color","blue");*/
+
+			/*通过 .author 找到所有的兄弟元素*/
+			$(".author").siblings().css("background","yellow");
+		}
+	</script>
+ </head>
+ <body>
+  <div id="container">
+		<p class="title">悯农</p>
+		<p class="author">匿名</p>
+		<p>锄禾日当午</p>
+		<p>汗滴禾下土</p>
+		<p>谁知盘中餐</p>
+		<p>粒粒皆辛苦</p>
+	</div>
+	<button onclick="btnTest()">测试</button>
+ </body>
+</html>

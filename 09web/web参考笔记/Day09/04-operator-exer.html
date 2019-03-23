@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <script>
+		var height = prompt("请输入身高:");
+		var weight = prompt("请输入体重:");
+		var bmi = weight / (height * height);
+		var r = bmi < 18.5 ? "偏瘦" : bmi > 23.9 ? "偏胖" : "正常";
+		console.log(r);
+	</script>
+ </body>
+</html>

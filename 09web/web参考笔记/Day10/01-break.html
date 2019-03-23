@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+	<script>
+		//从弹框中录入数据，并打印在控制台上，输入 exit 退出
+		//循环条件：输入 exit 退出
+		//循环操作：录入数据 ， 打印数据 ，判断条件退出
+		while(true){
+			var input = prompt("请输入数据(exit退出):");
+			//如果是exit不打印，直接退出
+			if(input == "exit"){
+				break;
+			}
+			console.log(input);
+		}
+	</script>  
+ </body>
+</html>

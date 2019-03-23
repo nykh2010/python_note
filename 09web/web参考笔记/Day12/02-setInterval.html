@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+	<script>
+		var timer; //全局定时器
+		function start(){
+			//为全局的定时器赋值
+			timer = setInterval(function(){
+				var now = new Date();
+				console.log(now.toLocaleString());
+			},1000);
+		}
+
+		function stop(){
+			clearInterval(timer);
+		}
+	</script>
+  <button onclick="start()">开始</button>
+	<button onclick="stop()">停止</button>
+ </body>
+</html>

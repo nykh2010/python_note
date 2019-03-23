@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <script>
+		var year = prompt("Year:");
+		var month = prompt("Month:");
+		var day = Number(prompt("Day:"));
+		var totalDays = 0;
+		var isRun=year%4==0&&year%100!=0||year%400==0;
+
+		if(month == 1){
+			totalDays = day;
+		}else if(month == 2){
+			totalDays = 31 + day;
+		}else if(month == 3){
+			totalDays = 31 + (isRun?29:28) + day;
+		}else if(month == 4){
+			totalDays = 31 + (isRun?29:28) + 31 + day;
+		}
+
+		console.log("是第"+totalDays+"天");
+	</script>
+ </body>
+</html>

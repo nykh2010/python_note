@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <button id="btn">动态绑定事件</button>
+	<button onclick="btnTest()">测试</button>
+	<script src="common.js"></script>
+	<script>
+		/**
+		 * 为 #btn 动态绑定 click 事件
+		 */
+		function btnTest(){
+			//1、获取 #btn 元素
+			var btn = $("btn");
+			//2、为 #btn 绑定事件
+			btn.onclick = function(){
+				alert("这是动态绑定的事件!!!");
+				alert(this.innerHTML);
+			}
+		}
+	</script>
+ </body>
+</html>

@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <button id="btn1" onclick="btn_click(event)">BTN1</button>	
+	<button id="btn2">BTN2</button>
+	<script>
+		function btn_click(event){
+			//btn_click 不属于任何对象，所以 this 表示的 window
+			//console.log(this);
+
+			//获取事件源
+			console.log(event.target);
+		}
+
+		var btn2 = document.getElementById("btn2");
+		btn2.onclick = function(){
+			//该匿名函数属于btn2，所以 this 表示的是 btn2
+			console.log(this);
+
+			//获取事件源，等同于 this
+			console.log(event.target);
+		}
+	</script>
+ </body>
+</html>

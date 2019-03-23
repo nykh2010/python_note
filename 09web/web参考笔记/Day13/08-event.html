@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <button onclick="btn1_click(event)">按钮1</button>
+	<button id="btn2">按钮2</button>
+	<script src="common.js"></script>
+	<script>
+		function btn1_click(event){
+			console.log(event);
+		}
+
+		window.onload = function(){
+			$("btn2").onclick = function(event){
+				console.log(event);
+			}
+		}
+	</script>
+ </body>
+</html>

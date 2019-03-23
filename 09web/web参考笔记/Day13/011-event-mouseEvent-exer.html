@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+	<style>
+
+		#container{
+			position:relative;
+		}
+		#show{
+			width:400px;
+			height:400px;
+			border:2px solid blue;
+			background:#f00;
+		}
+		#pic{
+			width:400px;
+			height:400px;
+			border:2px solid blue;
+			background:#ff0;
+			position:absolute;
+			left:422px;
+			top:0px;
+			display:none;
+
+			text-align:center;
+			line-height:400px;
+			font-size:44px;
+			color:blue;
+		}
+	</style>
+ </head>
+ <body>
+  <div id="container">
+		<div id="show"></div>
+		<div id="pic"></div>
+	</div>
+	<script src="common.js"></script>
+	<script>
+		window.onload = function(){
+			//为 #show 绑定鼠标进入事件
+			$("show").onmouseover = function(){
+				$("pic").style.display = "block";
+			}
+
+			//为 #show 绑定鼠标移出事件
+			$("show").onmouseout = function(){
+				$("pic").style.display = "none";
+			}
+
+			//为 #show 绑定鼠标移动事件
+			$("show").onmousemove = function(event){
+				$("pic").innerHTML = event.offsetX + ":" + event.offsetY;
+			}
+		}
+	</script>
+ </body>
+</html>

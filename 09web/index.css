@@ -1,0 +1,10 @@
+h1{
+	font-size: 40px;
+}
+a{
+	color: red;
+	font-size: 40px;
+	text-decoration: none;
+	/*text-decoration-style: dotted;*/
+	/*text-decoration-line: line-through;*/
+}

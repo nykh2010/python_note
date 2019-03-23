@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <div id="poem1">
+		<p class="title">登鹳雀楼</p>
+		<p>白日依山尽</p>
+		<p>黄河入海流</p>
+		<p>欲穷千里目</p>
+		<p>更上一层楼</p>
+	</div>
+
+	<div id="poem2">
+		<p class="title">春晓</p>
+		<p>春眠不觉晓</p>
+		<p>处处闻啼鸟</p>
+		<p>夜来风雨声</p>
+		<p>花落知多少</p>
+	</div>
+	<button onclick="getAllP()">获取所有的p标记</button>
+
+	<button onclick="getPoem1P()">获取 poem1 中的 p</button>
+
+	<script src="common.js"></script>
+	<script>
+		function getPoem1P(){
+			//1、获取 id为 poem1 的元素
+			var poem1 = $("poem1");
+			//2、获取 poem1 中的所有的 p
+			var pList = poem1.getElementsByTagName("p");
+			//3、将peom1中的p的文字大小更改为20px
+			for(var i=0;i<pList.length;i++){
+				pList[i].style.fontSize = "20px";
+			}
+		}
+
+		function getAllP(){
+			//获取页面中所有的p
+			var allP=document.getElementsByTagName("p");
+			//循环遍历allP中的每一个元素
+			for(var i=0;i<allP.length;i++){
+				allP[i].style.color = "red";
+			}
+		}
+	</script>
+ </body>
+</html>

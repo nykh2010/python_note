@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+	<style>
+		#main{
+			padding:14px 26px 3px 19px;
+			border:2px solid #000;
+			/*想让当前元素的占地尺寸 400*400*/
+			width:351px;/*400-2-2-26-19*/
+			height:379px;/*400-2-2-14-3*/
+		}
+		#container{
+			padding:14px 26px 3px 19px;
+			border:2px solid #000;
+			width:400px;
+			height:400px;
+			/*重新指定计算方式*/
+			box-sizing:border-box;
+		}
+	</style>
+ </head>
+ <body>
+  <div id="main"></div>
+	<div id="container"></div>
+ </body>
+</html>

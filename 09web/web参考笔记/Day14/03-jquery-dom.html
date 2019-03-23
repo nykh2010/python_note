@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+	<script src="jquery-1.11.3.js"></script>
+	<script>
+		function msg_show(){
+			//1、获取 msg 的值
+			var value = $("#msg").val();
+			//2、为 show 赋值
+			$("#show").text("<h1>"+value+"</h1>");
+		}
+	</script>
+ </head>
+ <body>
+  <input type="text" id="msg">
+	<button onclick="msg_show()">显示</button>
+	<div id="show"></div>
+ </body>
+</html>

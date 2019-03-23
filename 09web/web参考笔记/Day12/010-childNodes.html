@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <div id="d1">
+		<p id="p1">这是第一个p</p>
+		<p>这是第二个p</p>
+		<p>这是第三个p</p>
+		<p>这是第四个p</p>
+	</div>
+
+
+	<button onclick='getD1Child()'>获取d1的所有子元素</button>
+	<button onclick="getNextSibling()">验证nextSibling</button>
+	<script src="common.js"></script>
+	<script>
+		function getNextSibling(){
+			var p1 = $("p1");
+			//获取 p1 的下一个兄弟元素
+			//var ns = p1.nextSibling; /*文本元素*/
+			var nes = p1.nextElementSibling;
+			console.log(nes);
+		}
+		
+		function getD1Child(){
+			//使用 child 属性
+			/*var d1 = $("d1");
+			// 获取d1中所有的子元素
+			var allChild = d1.childNodes;
+			for(var i=0;i<allChild.length;i++){
+				//判断 allChild[i] 是否为 元素节点
+				if(allChild[i].nodeType == 1){
+					console.log(allChild[i].innerHTML);
+				}
+			}*/
+
+
+			var d1 = $("d1");
+			//console.log(d1.children);
+			for(var i=0;i<d1.children.length;i++){
+				console.log(d1.children[i].innerHTML);
+			}
+		}
+	</script>
+ </body>
+</html>

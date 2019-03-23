@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>弹出菜单</title>
+	<style>
+		#menu{
+			width:100px;
+			height:30px;
+			background:orange;
+			text-align:center;
+			line-height:30px;
+			margin-left:300px;
+			/*相对定位：配合着 #sub-menu 做绝对定位*/
+			position:relative;
+		}
+		#sub-menu{
+			width:300px;
+			height:100px;
+			background:orange;
+			/*绝对定位：相对于 #menu 实现位置的定位*/
+			position:absolute;
+			top:30px;
+			right:0px;
+			/*默认为隐藏*/
+			display:none; /*display:block; 显示*/
+		}
+
+		#menu:hover>#sub-menu{
+			/*显示*/
+			display:block;
+		}
+	</style>
+ </head>
+ <body>
+  <div id="menu">
+		果园公告
+		<div id="sub-menu">
+			果园公告子菜单
+		</div>
+	</div>
+ </body>
+</html>

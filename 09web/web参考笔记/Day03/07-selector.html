@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+	<style>
+		/*100*/
+		#s1{color:red;}
+		/*100 + 1 ：101*/
+		#d1 span{color:green;}
+		/*10 + 1 ：11*/
+		.pp span{color:orange;}
+		/*100 + 1 + 1 ：102*/
+		#d1 p span{color:pink;}
+		/*100 + 1 + 10 + 1 ：112*/
+		#d1 p.pp span{color:purple;}
+		/*100 + 10 + 1 ：111*/
+		#d1 .pp span{color:blue;}
+		/*100 + 100 : 200*/
+		#d1 #s1{color:yellow;}
+	</style>
+ </head>
+ <body>
+  <div id="d1" style="background-color:#14A7F0">
+		<p class="pp">
+			<span id='s1' style="color:gray;">d1中的pp中的s1</span>
+		</p>
+	</div>	
+ </body>
+</html>

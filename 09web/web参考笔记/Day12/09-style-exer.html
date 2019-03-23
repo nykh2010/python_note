@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <p>
+		用户名：<input type="text" id="uname">
+		<button onclick="btnValidate()">验证</button>
+	</p>
+	<div id="uname-show"></div>
+	<script>
+		function $(id){
+			return document.getElementById(id);
+		}
+
+		function btnValidate(){
+			//1、获取 uname 的值
+			var value = $("uname").value;
+			var show = $("uname-show");
+			//2、验证 uname 的值的长度
+			if(value.length >= 6 && value.length <= 18){
+				show.innerHTML = "通过";
+				show.style.color = "green";
+			}else{
+				show.innerHTML = "用户名格式不正确";
+				show.style.color = "red";
+			}
+		}
+	</script>
+ </body>
+</html>

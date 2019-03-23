@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+	<style>
+		#d1,#d2,#d3{
+			width:100px;
+			height:200px;
+			border-radius:5px;
+			position:absolute;
+			top:50px;
+			left:0px;
+		}
+		#d1{background:red;}
+		#d2{
+			background:green;
+			/*距离d1向右偏移30px*/
+			left:30px;
+		}
+		#d3{
+			background:yellow;
+			/**距离d2向右偏移30px*/
+			left:60px;
+		}
+		#d1:hover,#d2:hover,#d3:hover{
+			/*向上30px*/
+			top:20px;
+			/*显示在其他的元素之上*/
+			z-index:10;
+		}
+	</style>
+ </head>
+ <body>
+  <div id="d1"></div>
+	<div id="d2"></div>
+	<div id="d3"></div>
+ </body>
+</html>

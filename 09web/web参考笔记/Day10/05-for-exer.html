@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <!-- <script>
+  		var num = Number(prompt("请输入一个数字："));
+  		//isSu用于记录num是否为素数，默认为素数!
+  		var isSu = true;
+  		//条件：从2开始，到num-1结束 或 num / 2结束 
+  		//操作：判断num 是否能被 条件 整除
+  		for(var i=2;i<=num/2;i++){
+  			if(num % i == 0){
+  				isSu = false;
+  				break;
+  			}
+  		}
+  
+  		if(isSu){
+  			console.log(num+"是素数");
+  		}else{
+  			console.log(num+"不是素数");
+  		}
+  	</script> -->
+	<!-- <script>
+		var line = Number(prompt("请输入您要打印的行数"));
+		//拼 要打印输出的内容
+		var str = "";
+		for(var i=1;i<=line;i++){
+			str += i+"*"+line+"="+i*line+"\t";
+		}
+		console.log(str);
+	</script> -->
+
+	<script>
+		
+		for(var i = 1;i <= 9 ; i++){
+			var str = "";
+			for(var j = 1;j <= i ; j++){
+				str += j + "*" + i + "=" + (j*i) + "\t";
+			}
+			console.log(str);
+		}
+		
+	</script>
+ </body>
+</html>

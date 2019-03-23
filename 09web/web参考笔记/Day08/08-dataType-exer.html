@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <script>
+		//1、从弹框中录入一个数字
+		var salary = prompt("请输入本月工资:");
+		//2、将录入的数字 + 10再打印输出
+		/*salary = salary + 10;
+		console.log("涨薪10元钱后的结果为:"+salary);*/
+		//3、验证输入数据的数据类型
+		/*var t = typeof(salary);
+		console.log("输入数据的数据类型为:"+t);*/
+		//4、将输入的数字转换为数字再+10并打印输出
+		salary = Number(salary);
+		salary = salary + 10;
+		console.log("涨薪10元钱后的结果为:"+salary);
+	</script>
+ </body>
+</html>

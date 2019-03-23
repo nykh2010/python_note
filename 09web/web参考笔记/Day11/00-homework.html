@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <script>
+		
+		/**
+		 * 判断指定的年份是否为闰年
+		 * 参数 year：要判断的年份
+		 * 返回值：是否为闰年的结果，true为闰年，false为非闰年
+		 */
+		function isRun(year){
+			return year%4==0&&year%100!=0||year%400==0;
+		}
+
+		function calDate(){
+			var year = Number(prompt("Year:"));
+			var month = Number(prompt("Month:"));
+			var day = Number(prompt("Day:"));
+			var totalDays = 0;
+
+			/*1、累加 1900 ~ year - 1 所有天数 */
+			for(var i=1900;i<year;i++){
+				totalDays += 365;
+				if(isRun(i)){
+					totalDays += 1;
+				}
+			}
+			/*2、从1月开始 ，到month-1月为止 ，整月加*/
+			for(var i=1;i<month;i++){
+				switch(i){
+					case 1:
+					case 3:
+					case 5:
+					case 7:
+					case 8:
+					case 10:
+						totalDays += 31;
+						break;
+					case 4:
+					case 6:
+					case 9:
+					case 11:
+						totalDays += 30;
+						break;
+					case 2:
+						totalDays += 28;
+						if(isRun(year)){
+							totalDays += 1;
+						}
+						break;
+				}
+			}
+			/*3、累加输入的day*/
+			totalDays += day;
+
+			/*4、用 totalDays 与 7 取余*/
+			var date = totalDays % 7;
+			console.log("星期"+date);
+		}
+	</script>
+	<button onclick="calDate()">日期计算器</button>
+ </body>
+</html>

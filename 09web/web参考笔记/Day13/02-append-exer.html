@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+	<style>
+		#tbl{
+			width:600px;
+			border:1px solid #000;
+			border-collapse:collapse;
+		}
+
+		#tbl td{
+			border:1px solid #000;
+		}
+	</style>
+ </head>
+ <body>
+  <p>
+		<input type="text" id="gname" placeholder="商品名称">
+		<input type="text" id="gprice" placeholder="商品价格">
+		<input type="text" id="gcount" placeholder="购买数量">
+		<button onclick="btnBuy()">购买</button>
+
+	</p>
+	<table id="tbl">
+		<thead>
+			<tr>
+				<td>商品名称</td>
+				<td>商品价格</td>
+				<td>购买数量</td>
+				<td>操作</td>
+			</tr>
+		</thead>
+		<tbody id="body"></tbody>
+	</table>
+	<script src="common.js"></script>
+	<script>
+		function btnBuy(){
+			//1、获取三个文本框的值，并创建两个按钮
+			var gname = $("gname").value;
+			var gprice = $("gprice").value;
+			var gcount = $("gcount").value;
+			//创建修改按钮
+			var btnUpdate = document.createElement("button");
+			btnUpdate.innerHTML = "修改";
+			//创建删除按钮
+			var btnDelete = document.createElement("button");
+			btnDelete.innerHTML = "删除";
+			//为 btnDelete 绑定事件
+			btnDelete.onclick = function(){
+				//通过 this 找到 tr
+				var tr = this.parentNode.parentNode;
+				//通过 tbody 删除 tr
+				$("body").removeChild(tr);
+			}
+
+			//2、动态创建4个td，分别保存3个值以及两个按钮
+			var tdName = document.createElement("td");
+			tdName.innerHTML = gname;
+			var tdPrice = document.createElement("td");
+			tdPrice.innerHTML = gprice;
+			var tdCount = document.createElement("td");
+			tdCount.innerHTML = gcount;
+			var tdOper = document.createElement("td");
+			tdOper.appendChild(btnUpdate);
+			tdOper.appendChild(btnDelete);
+			//3、动态创建1个tr，并将4个td设置为tr的子元素
+			var tr = document.createElement("tr");
+			tr.appendChild(tdName);
+			tr.appendChild(tdPrice);
+			tr.appendChild(tdCount);
+			tr.appendChild(tdOper);
+			//4、将tr添加到 tbody 中
+			$("body").appendChild(tr);
+		}
+	</script>
+ </body>
+</html>

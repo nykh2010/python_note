@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+
+	<style>
+		#anchor{
+			color:black;
+			text-decoration:none;/*取消下划线*/
+		}
+		
+		/*当鼠标悬停在 #anchor 上的时候*/
+		#anchor:hover{
+			text-decoration:underline; /*增加下划线*/
+		}
+
+		#t{
+			color:gray;
+			font-style:italic;/*斜体显示文本*/
+		}
+		/*当#t被激活时:一瞬间*/
+		#t:active{
+			font-style:normal;/*非斜体显示*/
+		}
+		/*当#t处于获取焦点的状态时:长时间状态*/
+		#t:focus{
+			color:green;
+		}
+	</style>
+ </head>
+ <body>
+	<a href="https://www.baidu.com">百度</a>
+	<a href="http://www.csdn.net">CSDN</a>
+	<p>
+		<a id="anchor" href="http://news.163.com">去往网易新闻</a>
+	</p>
+	<p>
+		<input id="t" type="text" value="测试状态的文本">
+	</p>
+ </body>
+</html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>浮动元素对父元素高度的影响</title>
+	<style>
+		#main{
+			border:2px solid #000;
+			/* float:left; */
+			/* overflow:hidden; */
+		}
+		.c1,.c2,.c3{
+			width:200px;
+			height:200px;
+		}
+		.c1{
+			background:red;
+			float:left;
+		}
+		.c2{
+			background:green;
+			float:left;
+		}
+		.c3{
+			background:blue;
+			float:left;
+		}
+
+		.c4{
+			clear:both;
+		}
+	</style>
+ </head>
+ <body>
+  <div id="main">
+		<div class="c1"></div>
+		<div class="c2"></div>
+		<div class="c3"></div>
+		<div class="c4"></div>
+	</div>
+	<div>
+		这是 main 后面的 元素
+	</div>
+ </body>
+</html>

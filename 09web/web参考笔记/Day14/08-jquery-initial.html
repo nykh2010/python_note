@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+	<script src="jquery-1.11.3.js"></script>
+	<script>
+		$(document).ready(function(){
+			console.log("DOM树加载完成后就执行的操作!");
+		});
+
+		$().ready(function(){
+			console.log("DOM树加载完成后就执行的操作 - 简写版");
+		});
+
+		$(function(){
+			console.log("DOM树加载完成后就执行的操作 - 终极版");
+		});
+	</script>
+ </head>
+ <body>
+  
+ </body>
+</html>

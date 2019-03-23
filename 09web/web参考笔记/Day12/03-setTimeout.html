@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+	<script>
+		function btnClose(){
+			if(confirm("确认关闭网页吗?")){
+				setTimeout(function(){
+					window.close();
+				},5000);
+			}
+		}
+	</script>
+  <button onclick="btnClose()">关闭网页</button>
+ </body>
+</html>

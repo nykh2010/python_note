@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <input type="text" id="message">
+	<button onclick="btnShow()">显示</button>
+	<div id="message-show"></div>
+
+	<script>
+		function btnShow(){
+			//1、获取 message 中的 value 内容
+			var message = document.getElementById("message").value;
+			//2、再将获取出来的内容构建成 <h1> 放到 message-show中
+			var messageShow = document.getElementById("message-show");
+			messageShow.innerHTML = "<h1>"+message+"</h1>";
+		}
+	</script>
+ </body>
+</html>

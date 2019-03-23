@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+	<script>
+		/**
+		 * 改变格式
+		 */
+		function changeTime(time){
+			if(time < 10){
+				time = "0"+time;
+			}
+			return time;
+		}
+
+		function showTime(){
+			var now = new Date();
+
+			var year = now.getFullYear();
+			var month = changeTime(now.getMonth() + 1);
+			var date = changeTime(now.getDate());
+			var day = now.getDay();
+			var hour = changeTime(now.getHours());
+			var minute = changeTime(now.getMinutes());
+			var second = changeTime(now.getSeconds());
+
+			switch(day){
+				case 0:
+					day = "日";
+					break;
+				case 1:
+					day = "一";
+					break;
+				case 2:
+					day = "二";
+					break;
+				case 3:
+					day = "三";
+					break;
+				case 4:
+					day = "四";
+					break;
+				case 5:
+					day = "五";
+					break;
+				case 6:
+					day = "六";
+					break;
+			}
+
+			console.log(year+"年"+month+"月"+date+"日 "+hour+"时"+minute+"分"+second+"秒 星期"+day);
+		}
+	</script>
+  <button onclick="showTime()">显示时间</button>
+ </body>
+</html>

@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <div id="container"></div>
+	<button onclick="btnCreate()">创建新元素</button>
+	<script src="common.js"></script>
+	<script>
+		/**
+		 * 动态创建一个 p 元素， 插入到 #container 中
+		 */
+		function btnCreate(){
+			var p = document.createElement("p");
+			p.setAttribute("id","p1");
+			p.className = "pp";
+			p.innerHTML = "这是动态创建的p元素";
+			p.style.color = "red";
+			p.style.fontSize = "28px";
+			$("container").appendChild(p);
+		}
+	</script>	
+ </body>
+</html>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+	<style>
+		#d1,#d2,#d3{
+			width:200px;
+			height:200px;
+		}
+
+		#d1{
+			background:red;
+			float:left;
+		}
+
+		#d2{
+			background:green;
+			float:left;
+		}
+
+		#d3{
+			background:blue;
+			/*不想被前面元素左浮动带来影响，所以可以清除前面元素左浮动带来的影响*/
+
+			/*清除前面元素任何一种浮动方式所带来的影响*/
+			clear:both;
+		}
+	</style>
+ </head>
+ <body>
+  <div id="d1"></div>
+	<div id="d2"></div>
+	<div id="d3"></div>
+ </body>
+</html>

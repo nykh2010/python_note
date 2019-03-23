@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <script>
+		/**
+		 * 指定升序排序的排序函数
+		 */
+		function sortAsc(a,b){
+			return a-b;
+		}
+
+		function sortArr(){
+			var nums = [128,36,5,1192,276,453];
+			//默认的排序规则
+			/*console.log("排序前:"+nums);
+			nums.sort();
+			console.log("排序后:"+nums);*/
+
+			/*指定 sortAsc 为 nums 数组的排序函数*/
+			/*console.log("排序前:"+nums);
+			nums.sort(sortAsc);
+			console.log("排序后:"+nums);*/
+
+			/*使用匿名函数完成数组的排序(降序)*/
+			console.log("排序前:"+nums);
+			nums.sort(function(a,b){
+				return b-a;
+			});
+			console.log("排序后:"+nums);
+		}
+	</script>
+	<button onclick="sortArr()">排序</button>
+ </body>
+</html>

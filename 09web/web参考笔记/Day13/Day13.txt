@@ -1,0 +1,188 @@
+﻿1、DOM
+	1、增加节点
+		1、创建元素节点
+			语法
+				var elem=document.createElement("元素名");
+			ex:
+				var div=document.createElement("div");
+				div.setAttribute("id","container");
+				div.innerHTML = "动态创建的div";
+		2、增加节点
+			将创建好的元素增加到网页中
+			1、document.body.appendChild(elem)
+				向body中追加elem的新元素
+			
+			2、parentNode.appendChild(elem)
+				向 parentNode 的内部追加 elem 新元素
+				parentNode ：表示页面上任何一个节点
+
+			3、parentNode.insertBefore(newElem,oldElem)
+				将newElem元素插入到parentNode中oldElem元素之前
+	2、删除节点
+		在DOM中，删除节点的行为只能由父元素发起
+		1、删除body中的子元素
+			document.body.removeChild(elem);
+			在 body 中删除 elem 节点
+		2、删除其他元素的子元素
+			parentNode.removeChild(elem);
+			删除 parentNode 中的 elem 子元素
+2、事件
+	1、什么是事件
+		通常都是由用户的行为来激发的操作
+	2、触发事件的行为
+		所有的事件在绑定时，必须加 on
+		1、鼠标事件
+			click ：鼠标单击事件
+			mouseover ：鼠标移入进元素时的事件
+			mouseout ：鼠标移出元素时的事件
+			mousemove ：鼠标在元素内移动时的事件
+		2、键盘事件
+			keydown ：键位按下时的事件
+			keypress ：键位按下时的事件
+			keyup ：键位抬起时的事件
+		3、状态改变事件
+			load ：元素加载完成时的事件(body,img)
+			change ：元素发生改变时的事件(select)
+			focus ：元素获取焦点时的事件
+			blur ：元素失去焦点时的事件
+			submit ：表单被提交时的事件
+	3、绑定事件的方式
+		1、在元素中绑定事件
+			<button onclick="">
+			语法：
+				<ANY on事件名="">
+			ex:
+				1、为 div 元素绑定 鼠标移入事件
+					<div onmouseover="执行函数()"></div>
+				2、为 body 绑定 load 事件
+					<body onload="执行函数()"></body>
+		2、在js中动态的为元素绑定事件
+			var div = document.getElementById("d1");
+			div.on事件名=function(){
+				事件操作
+			}
+			
+
+			var d1=document.getElementById("d1");
+			1、动态的为 d1 绑定click事件
+				d1.onclick = function(){
+					
+				}
+			2、动态的为 d1 绑定 鼠标移出 事件
+				d1.onmouseout = function(){
+					this : 表示的就是 d1 元素
+				}
+			注意：
+				在动态绑定事件中，在事件处理函数内，允许通过 this 关键字，来表示当前的元素(DOM元素)
+	4、事件行为
+		1、load 事件
+			常用：为body绑定load事件，目的是为了在所有内容都加载完成之后再执行的操作。
+			1、<body onload="函数()">
+			2、JS中动态绑定
+				window.onload = function(){
+					
+				}
+		2、submit 事件
+			只有在表单被提交的时候才起到作用
+				注意：该事件需要一个boolean返回值来通知表单是否要提交。返回为true，可以提交表单，返回为false则阻止表单提交
+	5、事件对象(event对象)
+		1、什么是事件对象
+			任何一个事件在触发后，都会自动产生一个event对象。
+			event对象中会包含与当前事件相关的一些属性和方法：事件源，键盘和鼠标的信息
+		2、获取 event 对象
+			1、html元素中绑定事件
+				<ANY on事件名="btn(event)">
+
+				<script>
+					function btn(event){
+						event 表示的就是事件对象
+					}
+				</script>
+			2、在JS中动态为元素绑定事件
+				var d1 = document.getElementById("d1");
+				d1.onclick = function(event){
+					event表示的就是事件对象
+				}
+		3、事件对象的常用属性
+			1、事件源
+				1、什么是事件源
+					触发当前事件的元素是谁
+				2、获取事件源
+					通过 event.target 获取事件源
+					得到一个 DOM对象
+			2、鼠标事件(事件对象常用属性)
+				鼠标事件：
+					click,mouseover,mousemove,mouseout
+				1、offsetX，offsetY
+					获取鼠标在 元素上 的坐标点
+					以元素的左上角为(0,0)
+				2、clientX，clientY
+					获取鼠标在 网页上 的坐标点
+				3、screenX，screenY
+					获取鼠标在 显示器上 的坐标点
+			3、键盘事件(事件对象常用属性)
+				键盘事件：
+					keypress,keydown,keyup
+					1、keypress	
+						1、which
+							当前按下的字符的 ASCII 码
+						2、key
+							当前按下的字符
+					2、keydown
+						1、which
+							当前按下的键位的键位码
+							大小写键位是同一键位：键位码相同
+		4、事件冒泡
+			1、什么是事件冒泡
+				当激发子元素事件时，同时把父元素对应的事件也给执行了
+				
+				场合：
+					1、必须是父子结构或具备层级关系的元素
+					2、必须同时设置了相同的事件
+			2、阻止事件冒泡
+				让事件只在当前元素中执行，不向上冒泡
+				event.stopPropagation()
+=================================
+jQuery
+1、jQuery的介绍
+	jQuery是一个轻量级的JS库 - 是一个被封装好的JS文件，提供了更为简便的元素操作方式
+
+	jQuery封装了 DOM ， JS
+	核心理念：Write Less Do More
+
+	jQuery版本：
+		jQuery 2.x   不再兼容 IE6.7.8
+		jQuery 1.11.x
+2、使用jQuery
+	1、引入jQuery文件
+		<script src="jquery-1.11.3.js"></script>
+		注意：引入文件的操作必须要放在其他jQuery操作之前
+	2、使用jQuery的操作
+3、jQuery对象
+	1、什么是jQuery对象
+		jQuery对象是由jQuery对页面元素进行封装后的一种体现
+		jQuery中所提供的所有的操作都只针对jQuery对象，其他对象(DOM对象)无法使用
+	2、工厂函数 - $()
+		想要获取jquery对象的话，就必须使用工厂函数 -$()
+		在 $() 中允许传递一个选择器/DOM元素，$()能够将选择器 和 DOM元素封装成jQuery对象进行返回
+	3、DOM对象 和 jQuery对象之间的转换
+		DOM对象：不能使用jQuery提供的操作的
+		jQuery对象：不能使用DOM提供的操作
+
+		1、将DOM对象转换为jQuery对象
+			语法：
+				var 变量 = $(DOM对象);
+				注意：所有的jQuery对象在起名的时候，最好在变量名称前 + $ , 用于和DOM对象的区分
+					var d1 = document.getElementById("d1");
+					var $d1 = $(d1);
+		2、将jQuery对象转换成DOM对象
+			1、var dom对象 = jQuery对象.get(0);
+			2、var dom对象 = jQuery对象[0];
+
+			var $d1 = $("#d1");
+			var d1 = $d1[0]; // $d1.get(0);
+
+
+
+
+

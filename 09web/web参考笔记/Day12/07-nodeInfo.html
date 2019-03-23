@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <div id="d1">这是一个div</div>
+	<button onclick="getD1()">读取d1的信息</button>
+	<button onclick="getID()">获取 ID 属性</button>
+	<script>
+		function getID(){
+			var d1 = document.getElementById("d1");
+
+			var attrValue = d1.getAttribute("id");
+			console.log(attrValue);
+			//为d1元素设置 class 属性的值为 uname
+			d1.setAttribute("class","uname");
+		}
+
+		function getD1(){
+			var d1 = document.getElementById("d1");
+			console.log("d1的节点类型为:"+d1.nodeType);
+			console.log("d1的节点名称为:"+d1.nodeName);
+		}
+	</script>
+ </body>
+</html>

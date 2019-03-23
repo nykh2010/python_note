@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+	<script src="common.js"></script>
+	<script>
+		window.onload = function(){
+			$("loginForm").onsubmit=function(){
+				var uname = $("uname").value;
+				if(uname.length<6 || uname.length>18){
+					alert("用户名必须6-18位");
+					return false;
+				}
+				var upwd = $("upwd").value;
+				var cpwd = $("cpwd").value;
+				if(upwd != cpwd){
+					alert("两次密码输入不一致");
+					return false;
+				}
+				return true;
+			}
+		}
+	</script>
+ </head>
+ <body>
+  <form action="login" id="loginForm">
+		<p>
+			用户名称：
+			<input type="text" id="uname">
+		</p>
+		<p>
+			用户密码：
+			<input type="password" id="upwd">
+		</p>
+		<p>
+			确认密码：
+			<input type="password" id="cpwd">
+		</p>
+		<p>
+			<input type="submit" value="提交">
+		</p>
+	</form>
+ </body>
+</html>

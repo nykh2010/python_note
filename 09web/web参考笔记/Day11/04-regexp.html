@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <script>
+		function testReg(){
+			var reg = /^\d{6}$/;
+			var msg = prompt("请输入6位数字:");
+			if(reg.test(msg)){
+				alert("格式正确");
+			}else{
+				alert("格式错误");
+			}
+		}
+	</script>
+	<button onclick="testReg()">测试正则</button>
+ </body>
+</html>

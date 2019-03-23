@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <input type="radio" name="gender"> 男
+	<input type="radio" name="gender"> 女
+	<button onclick="validate()">验证</button>
+	<script>
+		function validate(){
+			//1、获取 name 为 gender 的所有的元素
+			var gList = document.getElementsByName("gender");
+			//2、循环遍历所有的元素，只要有一个被选中即可
+			var ch = false;
+			for(var i=0;i<gList.length;i++){
+				if(gList[i].checked){
+					ch = true;
+					break;
+				}
+			}
+			if(!ch){
+				alert("至少选中一项!");
+			}
+		}
+	</script>
+ </body>
+</html>

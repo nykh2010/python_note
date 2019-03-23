@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+	<script src="jquery-1.11.3.js"></script>
+	<script>
+		function create(){
+			//1、创建一个div
+			var $div = $("<div></div");
+			//console.log($div);
+			//2、设置其id属性为 d1
+			$div.attr("id","d1");
+			//3、设置其文本为 动态创建div
+			$div.html("动态创建的div");
+
+			//4、将$div追加到#container的内部
+			//$("#container").append($div);
+
+			//5、将$div作为兄弟元素插入到#container中
+			$("#container").after($div);
+		}
+	</script>
+ </head>
+ <body>
+	<div id="container"></div>
+  <button onclick="create()">创建元素</button>
+ </body>
+</html>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <body>
+  <script>
+		//1、循环外：生成一个1-100之间的随机数
+		var r = (Math.random()*100 | 0)+1;
+		//2、循环内：输入，比较 - do...while
+		do{
+			//1、输入数据
+			var input = prompt("请输入一个数字(exit退出)：");
+			//2、判断数据是exit以及 大小关系
+			if(input == "exit"){
+				alert("再见!!!");
+			}else if(input > r){
+				alert("猜大了!");
+			}else if(input < r){
+				alert("猜小了!");
+			}else if(input == r){
+				alert("恭喜您，猜对了!");
+			}else{
+				alert("输入有误，请重新输入!");
+			}
+		}while(input != "exit" && input != r);
+		//输入的数据既不是exit 也不等于 r的时候，则继续输入
+		// input != "exit" && input != r
+	</script>
+ </body>
+</html>
